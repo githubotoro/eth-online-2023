@@ -10,11 +10,15 @@
 	},
 	"dependencies": {
 		"@cometh/connect-sdk": "^1.1.0",
+		"@pushprotocol/restapi": "^1.4.23",
+		"@pushprotocol/socket": "^0.5.2",
+		"@tableland/sdk": "4.5.3-dev.0",
 		"clsx": "^2.0.0",
 		"ethers": "5.7.2",
 		"next": "13.5.4",
 		"react": "^18",
-		"react-dom": "^18"
+		"react-dom": "^18",
+		"zustand": "^4.4.3"
 	},
 	"devDependencies": {
 		"autoprefixer": "^10",

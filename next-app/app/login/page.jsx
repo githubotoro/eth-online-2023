@@ -1,12 +1,14 @@
-import { ComethConnector } from "./ComethConnector";
+import React from "react";
 
 const LoginPage = () => {
 	return (
-		<div>
-			Login Page
-			<hr />
-			<ComethConnector />
-		</div>
+		<React.Fragment>
+			<div>
+				Login Page
+				<hr />
+				<hr />
+			</div>
+		</React.Fragment>
 	);
 };
 
