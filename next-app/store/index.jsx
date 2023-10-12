@@ -13,4 +13,6 @@ export const useStore = create((set) => ({
 	setVideoData: (videoData) => set({ videoData }),
 	instanceProvider: null,
 	setInstanceProvider: (instanceProvider) => set({ instanceProvider }),
+	currUser: null,
+	setCurrUser: (currUser) => set({ currUser }),
 }));

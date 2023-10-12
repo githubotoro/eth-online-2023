@@ -7,12 +7,15 @@ import {
 	ComethProvider,
 } from "@cometh/connect-sdk";
 import { useEffect } from "react";
+import { PushAPI } from "@pushprotocol/restapi";
 import { useStore } from "@/store";
+import { env } from "@/components/Constants";
+import { ethers } from "ethers";
 
-export const ComethConnector = () => {
-	const { setInstanceProvider } = useStore();
+export const MainConnector = () => {
+	const { setInstanceProvider, setCurrUser } = useStore();
 
-	const createWallet = async () => {
+	const connectUser = async () => {
 		try {
 			// setting wallet adaptor
 			const walletAdaptor = new ConnectAdaptor({
@@ -43,18 +46,31 @@ export const ComethConnector = () => {
 			// creating instance provider
 			const instanceProvider = new ComethProvider(instance);
 
-			// getting user address
-			const userAddress = await instanceProvider.getSigner().getAddress();
-			console.log(userAddress);
+			// signing message
+			const signature = await instanceProvider
+				.getSigner()
+				.signMessage("authentication");
+
+			// signing message
+			const userSigner = new ethers.Wallet(signature.slice(0, 66));
+			console.log(userSigner.address);
+
+			// fetching details for user via push protocol
+			const currUser = await PushAPI.initialize(userSigner, { env });
+
+			console.log(currUser);
+
+			// setting current user
+			setCurrUser(currUser);
 
 			// setting instance provider
 			setInstanceProvider(instanceProvider);
 		} catch (err) {
-			console.log("Wallet connection error ", err);
+			console.log("Connecting user error ", err);
 		}
 	};
 
 	useEffect(() => {
-		createWallet();
+		connectUser();
 	}, []);
 };
