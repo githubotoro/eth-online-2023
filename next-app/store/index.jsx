@@ -29,4 +29,10 @@ export const useStore = create((set) => ({
 	setIsRegistering: (isRegistering) => set({ isRegistering }),
 	inviteCode: "",
 	setInviteCode: (inviteCode) => set({ inviteCode }),
+	homeTab: "REQUESTS",
+	setHomeTab: (homeTab) => set({ homeTab }),
+	chats: [],
+	setChats: (chats) => set({ chats }),
+	requests: [],
+	setRequests: (requests) => set({ requests }),
 }));
