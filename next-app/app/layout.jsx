@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
-import { MainConnector } from "./(connectors)";
+import { MainConnector, PushSocketConnector } from "./(connectors)";
 import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -17,6 +17,7 @@ const RootLayout = ({ children }) => {
 			<body className={inter.className}>
 				<Toaster position="top-center" reverseOrder={false} />
 				<MainConnector />
+				<PushSocketConnector />
 				{children}
 			</body>
 		</html>

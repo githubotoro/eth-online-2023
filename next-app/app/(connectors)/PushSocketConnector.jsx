@@ -6,7 +6,7 @@ import { EVENTS } from "@pushprotocol/socket";
 import { env } from "./Constants";
 import { createSocketConnection } from "@pushprotocol/socket";
 
-export const PushSocketConnector = ({ wallet_address }) => {
+export const PushSocketConnector = () => {
 	const {
 		pushSocket,
 		setPushSocket,
@@ -14,6 +14,7 @@ export const PushSocketConnector = ({ wallet_address }) => {
 		setIsPushSocketConnected,
 		latestFeedItem,
 		setLatestFeedItem,
+
 		userSigner,
 	} = useStore();
 
