@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { MainConnector } from "./(connectors)";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,6 +15,7 @@ const RootLayout = ({ children }) => {
 		<html lang="en">
 			<link rel="manifest" href="/manifest.json" />
 			<body className={inter.className}>
+				<Toaster position="top-center" reverseOrder={false} />
 				<MainConnector />
 				{children}
 			</body>
