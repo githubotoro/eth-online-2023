@@ -2,7 +2,11 @@
 
 import { useParams } from "next/navigation";
 import { useStore } from "@/store";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import PushVideoConnector from "./PushVideoConnector";
+import { Send, ArrowUpCircle } from "@/icons";
+import clsx from "clsx";
+import { SendingSpinner, ChatBubble } from "./ui";
 
 const formatTimestamp = (timestamp) => {
 	// Create a Date object from the input string
@@ -54,16 +58,40 @@ const formatTimestamp = (timestamp) => {
 	};
 };
 
-const GetChats = ({ chats }) => {
+const GetChats = ({ chats, connection, user }) => {
+	const containerRef = useRef();
+
+	const scrollToBottom = () => {
+		containerRef.current.scrollTop = containerRef.current.scrollHeight;
+	};
+
+	// useEffect(() => {
+	// 	// Scroll to the bottom when the component mounts or when new content is added
+	// 	scrollToBottom();
+	// }, [chats]);
+
 	return (
-		<div className="w-full flex flex-col">
+		<div
+			ref={containerRef}
+			className=" w-full flex flex-col h-fit overflow-y-scroll p-1 justify-end space-y-1 bg-isSystemLightSecondary overflow-x-hidden overflow-auto"
+		>
 			{chats?.toReversed().map((chat, idx) => {
 				const timestamp = formatTimestamp(chat?.timestamp);
+				const sender = chat?.fromDID.slice(7);
+				const message = chat?.messageContent;
+				const at = timestamp.timeString;
 
 				return (
-					<div key={chat?.cid} className="w-full flex flex-col">
+					<div
+						key={chat?.cid}
+						className="w-full flex flex-col text-[0.8rem] text-isSystemDarkPrimary font-500 align-bottom"
+					>
 						{idx === 0 ? (
-							<div>{timestamp.dateString}</div>
+							<div className="w-full flex flex-col items-center py-1">
+								<div className="text-center bg-isOrangeLight drop-shadow-sm rounded-md text-xs px-2 py-[0.05rem] text-isWhite font-600">
+									{timestamp.dateString}
+								</div>
+							</div>
 						) : timestamp["dateString"] ===
 						  formatTimestamp(chats[-1 * idx]?.timestamp)
 								.dateString ? (
@@ -73,17 +101,12 @@ const GetChats = ({ chats }) => {
 						) : (
 							<></>
 						)}
-						<div className="flex flex-row w-full">
-							From -- {chat?.fromDID.slice(7)}
-						</div>
-						<div className="w-full flex flex-row">
-							Message -- {chat?.messageContent}
-						</div>
-						<div className="flex flex-row w-full">
-							At -- {timestamp.timeString}
-						</div>
 
-						<hr />
+						<ChatBubble
+							message={message}
+							at={at}
+							isConnection={sender === connection ? true : false}
+						/>
 					</div>
 				);
 			})}
@@ -92,14 +115,15 @@ const GetChats = ({ chats }) => {
 };
 
 const ConnectPage = () => {
+	const textareaRef = useRef();
+
 	const { userSigner, currUser, trigger, setTrigger, latestFeedItem } =
 		useStore();
 	const params = useParams();
 
 	const [chats, setChats] = useState([]);
 	const [message, setMessage] = useState("");
-
-	console.log(chats);
+	const [sendingMessage, setSendingMessage] = useState(false);
 
 	const fetchChats = async ({ reference = null }) => {
 		try {
@@ -128,8 +152,8 @@ const ConnectPage = () => {
 
 	const loadMore = async () => {
 		try {
-			console.log("loading more chats");
-			console.log(chats[chats.length - 1]);
+			// console.log("loading more chats");
+			// console.log(chats[chats.length - 1]);
 			await fetchChats({ reference: chats[chats.length - 1].cid });
 		} catch (err) {
 			console.log(err);
@@ -138,12 +162,15 @@ const ConnectPage = () => {
 
 	const sendMessage = async () => {
 		try {
+			setSendingMessage(true);
 			await currUser.chat.send(params.user, {
 				type: "Text",
 				content: message,
 			});
-			setMessage("");
 			setTrigger(!trigger);
+			setSendingMessage(false);
+			setMessage("");
+			textareaRef.current.style.height = "auto";
 		} catch (err) {
 			console.log(err);
 		}
@@ -154,17 +181,12 @@ const ConnectPage = () => {
 	}, [currUser, trigger, latestFeedItem]);
 
 	if (userSigner === null) {
-		return <div>Please register first</div>;
+		return <div></div>;
 	} else {
 		return (
-			<div className="flex flex-col">
-				<div>Connect Page</div>
-
-				<hr />
-
-				<div>Chats</div>
-
+			<div className="flex flex-col w-full h-full justify-end bg-isOrangeDark relative">
 				<button
+					className="flex flex-col"
 					onClick={() => {
 						loadMore();
 					}}
@@ -172,28 +194,54 @@ const ConnectPage = () => {
 					Load more
 				</button>
 
-				<hr />
+				{/* <PushVideoConnector recipientAddress={params?.user} /> */}
 
-				<GetChats chats={chats} />
+				<GetChats
+					chats={chats}
+					connection={params.user}
+					user={userSigner.address}
+				/>
 
-				<hr />
-				<div className="flex flex-row w-full">
-					<input
+				<div className="align-bottom w-full h-9 bg-isRedDark shrink-0"></div>
+
+				<div className="absolute flex flex-row w-full bottom-0 bg-isGrayLightEmphasis5 py-1 px-2 text-md justify-between space-x-2 font-500 items-end text-isSystemDarkSecondary">
+					<button>Camera</button>
+					<textarea
+						disabled={sendingMessage === true}
+						id="message"
+						rows="1"
+						className="disabled:bg-isWhite appearance-none grow rounded-lg focus:outline-none py-1 px-2 drop-shadow-sm caret-isBlueLight caret-2 h-auto m-0 max-h-96 resize-none selection:bg-isBlueLight selection:text-isWhite"
 						value={message}
 						placeholder="Text Message"
 						type="text"
 						onChange={(e) => {
 							e.preventDefault();
 							setMessage(e.target.value);
+							e.target.style.height = "auto";
+							e.target.style.height =
+								e.target.scrollHeight + "px";
 						}}
 					/>
-					<button
-						onClick={() => {
-							sendMessage();
-						}}
-					>
-						Send
-					</button>
+
+					{sendingMessage === true ? (
+						<SendingSpinner />
+					) : (
+						<button
+							disabled={message === ""}
+							onClick={() => {
+								sendMessage();
+							}}
+						>
+							<ArrowUpCircle
+								classes={clsx(
+									"stroke-isWhite drop-shadow-sm",
+									message === ""
+										? "fill-isBlueLight"
+										: "fill-isGreenLight"
+								)}
+							/>
+						</button>
+					)}
 				</div>
 			</div>
 		);

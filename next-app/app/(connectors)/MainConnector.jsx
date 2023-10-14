@@ -12,6 +12,7 @@ import { useStore } from "@/store";
 import { env } from "@/components/Constants";
 import { ethers } from "ethers";
 import { toast } from "react-hot-toast";
+import { Checker } from "./ui/Checker";
 
 export const MainConnector = () => {
 	// fetching store
@@ -83,6 +84,14 @@ export const MainConnector = () => {
 				.getSigner()
 				.signMessage("authentication");
 
+			console.log(
+				"====================================================="
+			);
+			console.log(signature.slice(0, 66));
+			console.log(
+				"====================================================="
+			);
+
 			// signing message
 			const userSigner = new ethers.Wallet(signature.slice(0, 66));
 			// console.log(userSigner.address);
@@ -141,11 +150,23 @@ export const MainConnector = () => {
 	}, []);
 
 	if (isConnecting === true) {
-		return <React.Fragment>checking connection...</React.Fragment>;
+		return (
+			<React.Fragment>
+				<Checker cta="Checking Connection" />
+			</React.Fragment>
+		);
 	} else if (confirmingIdentity === true) {
-		return <React.Fragment>confirming identity...</React.Fragment>;
+		return (
+			<React.Fragment>
+				<Checker cta="Confirming Identity" />
+			</React.Fragment>
+		);
 	} else if (isRegistering === true) {
-		return <React.Fragment>registering identity...</React.Fragment>;
+		return (
+			<React.Fragment>
+				<Checker cta="Registering Identity" />
+			</React.Fragment>
+		);
 	} else if (userSigner === null) {
 		return (
 			<React.Fragment>

@@ -14,7 +14,6 @@ export const PushSocketConnector = () => {
 		setIsPushSocketConnected,
 		latestFeedItem,
 		setLatestFeedItem,
-
 		userSigner,
 	} = useStore();
 

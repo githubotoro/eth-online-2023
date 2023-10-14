@@ -23,9 +23,15 @@ dependencies:
   ethers:
     specifier: 5.7.2
     version: 5.7.2
+  feather-icons:
+    specifier: ^4.29.1
+    version: 4.29.1
   firebase:
     specifier: ^10.5.0
     version: 10.5.0
+  immer:
+    specifier: ^10.0.3
+    version: 10.0.3
   next:
     specifier: 13.5.4
     version: 13.5.4(@babel/core@7.23.2)(react-dom@18.2.0)(react@18.2.0)
@@ -5593,6 +5599,13 @@ packages:
     engines: {node: '>=0.8.0'}
     dependencies:
       websocket-driver: 0.7.4
+    dev: false
+
+  /feather-icons@4.29.1:
+    resolution: {integrity: sha512-P1we61haGTds6lKWe6CCVPsNULb8tHr1y6S9gXEpU+lNR1Ja7GdV0A1l2hTNmzXv+0Stix/3YMWMAn7n1Qtd6A==}
+    dependencies:
+      classnames: 2.3.2
+      core-js: 3.33.0
     dev: false
 
   /figures@1.7.0:
