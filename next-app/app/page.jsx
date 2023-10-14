@@ -3,6 +3,7 @@
 import { FetchContacts } from "./(contacts)";
 import React, { useState, useEffect } from "react";
 import { useStore } from "@/store";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const Home = () => {
 	const {
@@ -32,7 +33,9 @@ const Home = () => {
 	// }, []);
 
 	return (
-		<main className="flex flex-col w-full items-center">
+		<div className="">
+			<ConnectButton />
+
 			{/* <div className="flex flex-col w-full max-w-xl bg-isWhite h-full rounded-2xl drop-shadow-sm overflow-hidden relative">
 				<div className="flex w-full flex-row justify-between px-2 pt-1 relative">
 					<div>{timestamp?.timeString}</div>
@@ -60,7 +63,7 @@ const Home = () => {
 				homeTab={homeTab}
 				setHomeTab={setHomeTab}
 			/> */}
-		</main>
+		</div>
 	);
 };
 

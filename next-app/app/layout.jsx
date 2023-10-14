@@ -3,7 +3,9 @@ import { Inter } from "next/font/google";
 import { MainConnector, PushSocketConnector } from "./(connectors)";
 import { Toaster } from "react-hot-toast";
 import clsx from "clsx";
-import { TimestampIndicator } from "./TimestampIndicator";
+import { Indicator, Providers } from "@/components/Home";
+
+import "@rainbow-me/rainbowkit/styles.css";
 
 const inter = Inter({
 	subsets: ["latin"],
@@ -22,34 +24,19 @@ const RootLayout = ({ children }) => {
 	return (
 		<html lang="en">
 			<link rel="manifest" href="/manifest.json" />
-			<body
-				className={clsx(
-					inter.variable,
-					"font-sans bg-isGrayLightEmphasis6 w-full h-full flex flex-col font-500 text-xs text-isSystemDarkPrimary"
-				)}
-			>
+
+			<body className={clsx(inter.variable, "text-xs")}>
 				<Toaster position="top-center" reverseOrder={false} />
 
-				{/* <PushSocketConnector /> */}
+				<PushSocketConnector />
 
-				<div className="flex flex-col w-full h-screen items-center p-2">
-					<div className="flex flex-col w-full max-w-xl bg-isWhite h-full rounded-2xl drop-shadow-sm overflow-auto relative">
-						<TimestampIndicator />
+				<div className="absolute inset-0 h-screen flex flex-col w-full items-center p-2 bg-isGrayLightEmphasis6 overflow-hidden">
+					<div className="flex flex-col h-full w-full max-w-xl bg-isWhite rounded-2xl drop-shadow-sm overflow-hidden">
+						<Indicator />
 
-						<div className="absolute top-0 w-full flex flex-row items-center">
-							<div className="bg-isWhite flex-grow text-isWhite rounded-md -z-10 text-center">
-								.
-							</div>
-							<div className="z-10 bg-isSystemDarkTertiary text-isWhite w-full max-w-[9rem] text-center rounded-b-lg font-600 drop-shadow-sm">
-								ETH-Line
-							</div>
-							<div className="bg-isWhite flex-grow text-isWhite rounded-md -z-10 text-center">
-								.
-							</div>
-						</div>
-						<div className="absolute top-0 w-full h-2 bg-isSystemDarkTertiary -z-20"></div>
 						<MainConnector />
-						{children}
+
+						<Providers> {children}</Providers>
 					</div>
 				</div>
 			</body>

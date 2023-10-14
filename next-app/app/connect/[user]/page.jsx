@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useStore } from "@/store";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PushVideoConnector from "./PushVideoConnector";
 import { Send, ArrowUpCircle } from "@/icons";
 import clsx from "clsx";
@@ -58,7 +58,7 @@ const formatTimestamp = (timestamp) => {
 	};
 };
 
-const GetChats = ({ chats, connection, user }) => {
+const GetChats = ({ chats, connection, user, fetchingChat }) => {
 	const containerRef = useRef();
 
 	const scrollToBottom = () => {
@@ -66,14 +66,13 @@ const GetChats = ({ chats, connection, user }) => {
 	};
 
 	// useEffect(() => {
-	// 	// Scroll to the bottom when the component mounts or when new content is added
 	// 	scrollToBottom();
 	// }, [chats]);
 
 	return (
 		<div
 			ref={containerRef}
-			className=" w-full flex flex-col h-fit overflow-y-scroll p-1 justify-end space-y-1 bg-isSystemLightSecondary overflow-x-hidden overflow-auto"
+			className="w-full flex-1 overflow-y-scroll p-1 space-y-1 bg-isSystemLightSecondary overflow-x-hidden"
 		>
 			{chats?.toReversed().map((chat, idx) => {
 				const timestamp = formatTimestamp(chat?.timestamp);
@@ -84,7 +83,7 @@ const GetChats = ({ chats, connection, user }) => {
 				return (
 					<div
 						key={chat?.cid}
-						className="w-full flex flex-col text-[0.8rem] text-isSystemDarkPrimary font-500 align-bottom"
+						className="w-full text-[0.8rem] text-isSystemDarkPrimary font-500 align-bottom"
 					>
 						{idx === 0 ? (
 							<div className="w-full flex flex-col items-center py-1">
@@ -110,6 +109,33 @@ const GetChats = ({ chats, connection, user }) => {
 					</div>
 				);
 			})}
+
+			{fetchingChat === true ? (
+				<div className="w-full flex flex-col items-end ">
+					<div role="status">
+						<svg
+							aria-hidden="true"
+							class="inline w-4 h-4 animate-spin  fill-isGreenLight"
+							viewBox="0 0 100 101"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+								fill="currentColor"
+								className="fill-isWhite"
+							/>
+							<path
+								d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+								fill="currentFill"
+							/>
+						</svg>
+						<span class="sr-only">Loading...</span>
+					</div>
+				</div>
+			) : (
+				<></>
+			)}
 		</div>
 	);
 };
@@ -124,9 +150,12 @@ const ConnectPage = () => {
 	const [chats, setChats] = useState([]);
 	const [message, setMessage] = useState("");
 	const [sendingMessage, setSendingMessage] = useState(false);
+	const [fetchingChats, setFetchingChats] = useState(true);
+	const [fetchingChat, setFetchingChat] = useState(true);
 
 	const fetchChats = async ({ reference = null }) => {
 		try {
+			setFetchingChat(true);
 			const newChats = await currUser?.chat?.history(params.user, {
 				reference,
 			});
@@ -145,6 +174,8 @@ const ConnectPage = () => {
 				// Update the state by adding the unique chats
 				setChats((prevChats) => [...prevChats, ...uniqueChats]);
 			}
+			setFetchingChats(false);
+			setFetchingChat(false);
 		} catch (err) {
 			console.log(err);
 		}
@@ -184,28 +215,55 @@ const ConnectPage = () => {
 		return <div></div>;
 	} else {
 		return (
-			<div className="flex flex-col w-full h-full justify-end bg-isOrangeDark relative">
-				<button
+			<React.Fragment>
+				{/* <button
 					className="flex flex-col"
 					onClick={() => {
 						loadMore();
 					}}
 				>
 					Load more
-				</button>
+				</button> */}
 
 				{/* <PushVideoConnector recipientAddress={params?.user} /> */}
 
-				<GetChats
-					chats={chats}
-					connection={params.user}
-					user={userSigner.address}
-				/>
+				{fetchingChats === true ? (
+					<div className="grow flex flex-col items-center bg-isSystemLightSecondary place-content-center space-y-1">
+						<div className="font-600 text-isSystemDarkTertiary text-lg">
+							Fetching Chats
+						</div>
+						<div role="status">
+							<svg
+								aria-hidden="true"
+								className="inline w-6 h-6 mr-2 animate-spin  fill-isOrangeLight"
+								viewBox="0 0 100 101"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+									fill="currentColor"
+									className="fill-isWhite"
+								/>
+								<path
+									d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+									fill="currentFill"
+								/>
+							</svg>
+							<span className="sr-only">Loading...</span>
+						</div>
+					</div>
+				) : (
+					<GetChats
+						chats={chats}
+						connection={params.user}
+						user={userSigner.address}
+						fetchingChat={fetchingChat}
+					/>
+				)}
 
-				<div className="align-bottom w-full h-9 bg-isRedDark shrink-0"></div>
-
-				<div className="absolute flex flex-row w-full bottom-0 bg-isGrayLightEmphasis5 py-1 px-2 text-md justify-between space-x-2 font-500 items-end text-isSystemDarkSecondary">
-					<button>Camera</button>
+				<div className="shrink-0 flex flex-row w-full bottom-0 bg-isGrayLightEmphasis5 py-1 px-2 text-md justify-between space-x-2 font-500 items-end text-isSystemDarkSecondary">
+					{/* <button>Camera</button> */}
 					<textarea
 						disabled={sendingMessage === true}
 						id="message"
@@ -243,7 +301,7 @@ const ConnectPage = () => {
 						</button>
 					)}
 				</div>
-			</div>
+			</React.Fragment>
 		);
 	}
 };

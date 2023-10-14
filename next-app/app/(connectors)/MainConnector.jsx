@@ -126,8 +126,6 @@ export const MainConnector = () => {
 
 				const data = await res.json();
 
-				console.log(data);
-
 				if (data.code === 201) {
 					toast.success("Successfully registered!");
 				} else if (data.code === 401) {
@@ -152,7 +150,7 @@ export const MainConnector = () => {
 	if (isConnecting === true) {
 		return (
 			<React.Fragment>
-				<Checker cta="Checking Connection" />
+				<Checker cta="Signing In" />
 			</React.Fragment>
 		);
 	} else if (confirmingIdentity === true) {
@@ -203,10 +201,6 @@ export const MainConnector = () => {
 			</React.Fragment>
 		);
 	} else {
-		return (
-			<React.Fragment>
-				<div>Your Address {userSigner?.address}</div>
-			</React.Fragment>
-		);
+		return <div className="">Your Address {userSigner?.address}</div>;
 	}
 };

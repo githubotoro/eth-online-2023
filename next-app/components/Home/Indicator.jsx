@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-export const TimestampIndicator = () => {
+export const Indicator = () => {
 	const formatTimestamp = (timestamp) => {
 		// Create a Date object from the input string
 		const date = new Date(timestamp);
@@ -59,10 +59,23 @@ export const TimestampIndicator = () => {
 	});
 
 	return (
-		<div className="flex w-full flex-row justify-between px-2 pt-1 relative">
-			<div>{timestamp?.timeString}</div>
+		<div className="shrink-0 flex w-full flex-row justify-between pt-1 relative overflow-hidden rounded-2xl">
+			<div className="pl-2">{timestamp?.timeString}</div>
 
-			<div>{timestamp?.dateString}</div>
+			<div className="pr-2">{timestamp?.dateString}</div>
+
+			<div className="absolute w-full flex flex-row items-center -mt-1">
+				<div className="bg-isWhite flex-grow text-isWhite rounded-md -z-10 text-center">
+					.
+				</div>
+				<div className="z-10 bg-isSystemDarkTertiary text-isWhite w-full max-w-[9rem] text-center rounded-b-lg font-600 drop-shadow-sm">
+					ETH-Line
+				</div>
+				<div className="bg-isWhite flex-grow  text-isWhite rounded-md -z-10 text-center">
+					.
+				</div>
+			</div>
+			<div className="absolute top-0 w-full h-2 bg-isSystemDarkTertiary -z-20"></div>
 		</div>
 	);
 };
