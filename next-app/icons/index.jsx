@@ -1,4 +1,4 @@
-export { Send } from "./send";
+export { Send } from "./Send";
 export { ArrowUpCircle } from "./ArrowUpCircle";
 export { Copy } from "./Copy";
 export { Clipboard } from "./Clipboard";
