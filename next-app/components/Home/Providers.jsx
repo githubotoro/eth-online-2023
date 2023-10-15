@@ -20,16 +20,16 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
 	[publicProvider()]
 );
 
-const projectId = "YOUR_PROJECT_ID";
+const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_ID;
 
 const { wallets } = getDefaultWallets({
-	appName: "RainbowKit demo",
+	appName: "ETH-Line",
 	projectId,
 	chains,
 });
 
-const demoAppInfo = {
-	appName: "Rainbowkit Demo",
+const appInfo = {
+	appName: "ETH-Line",
 };
 
 const connectors = connectorsForWallets([
@@ -56,7 +56,7 @@ export function Providers({ children }) {
 	React.useEffect(() => setMounted(true), []);
 	return (
 		<WagmiConfig config={wagmiConfig}>
-			<RainbowKitProvider chains={chains} appInfo={demoAppInfo}>
+			<RainbowKitProvider chains={chains} appInfo={appInfo}>
 				{mounted && children}
 			</RainbowKitProvider>
 		</WagmiConfig>

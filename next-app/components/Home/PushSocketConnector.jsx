@@ -3,7 +3,7 @@
 import { useStore } from "@/store";
 import { useEffect } from "react";
 import { EVENTS } from "@pushprotocol/socket";
-import { env } from "./Constants";
+import { env } from "@/components/Constants";
 import { createSocketConnection } from "@pushprotocol/socket";
 
 export const PushSocketConnector = () => {

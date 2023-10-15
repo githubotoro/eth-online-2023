@@ -6,13 +6,14 @@ import {
 	SupportedNetworks,
 	ComethProvider,
 } from "@cometh/connect-sdk";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { PushAPI } from "@pushprotocol/restapi";
 import { useStore } from "@/store";
-import { env } from "@/components/Constants";
+import { env, ANIMATE } from "@/components/Constants";
 import { ethers } from "ethers";
 import { toast } from "react-hot-toast";
-import { Checker } from "./ui/Checker";
+import { Checker } from "@/components/Loaders/Checker";
+import { StaticBar } from "./StaticBar";
 
 export const MainConnector = () => {
 	// fetching store
@@ -52,10 +53,12 @@ export const MainConnector = () => {
 			// fetching local address
 			const localStorageAddress =
 				window.localStorage.getItem("walletAddress");
+			const currUsername = window.localStorage.getItem("username");
 
 			if (localStorageAddress) {
 				// if local address exists, connect the user
 				await instance.connect(localStorageAddress);
+				setUsername(currUsername);
 
 				// user already exists
 				setUserFound(true);
@@ -71,6 +74,7 @@ export const MainConnector = () => {
 				await instance.connect();
 				const walletAddress = await instance.getAddress();
 				window.localStorage.setItem("walletAddress", walletAddress);
+				window.localStorage.setItem("username", username);
 			}
 
 			// confirming identity
@@ -83,14 +87,6 @@ export const MainConnector = () => {
 			const signature = await instanceProvider
 				.getSigner()
 				.signMessage("authentication");
-
-			console.log(
-				"====================================================="
-			);
-			console.log(signature.slice(0, 66));
-			console.log(
-				"====================================================="
-			);
 
 			// signing message
 			const userSigner = new ethers.Wallet(signature.slice(0, 66));
@@ -147,22 +143,33 @@ export const MainConnector = () => {
 		connectUser({ registerCall: false });
 	}, []);
 
+	const GREEN_SPINNER = "fill-isGreenLight h-6 w-6";
+	const RING = "fill-isGrayLightEmphasis6";
+
 	if (isConnecting === true) {
 		return (
 			<React.Fragment>
-				<Checker cta="Signing In" />
+				<Checker cta="Signing In" classes={GREEN_SPINNER} ring={RING} />
 			</React.Fragment>
 		);
 	} else if (confirmingIdentity === true) {
 		return (
 			<React.Fragment>
-				<Checker cta="Confirming Identity" />
+				<Checker
+					cta="Confirming Identity"
+					classes={GREEN_SPINNER}
+					ring={RING}
+				/>
 			</React.Fragment>
 		);
 	} else if (isRegistering === true) {
 		return (
 			<React.Fragment>
-				<Checker cta="Registering Identity" />
+				<Checker
+					cta="Registering Identity"
+					classes={GREEN_SPINNER}
+					ring={RING}
+				/>
 			</React.Fragment>
 		);
 	} else if (userSigner === null) {
@@ -201,6 +208,6 @@ export const MainConnector = () => {
 			</React.Fragment>
 		);
 	} else {
-		return <div className="">Your Address {userSigner?.address}</div>;
+		return <StaticBar address={userSigner?.address} username={username} />;
 	}
 };

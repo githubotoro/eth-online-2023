@@ -34,7 +34,7 @@ const Home = () => {
 
 	return (
 		<div className="">
-			<ConnectButton />
+			{/* <ConnectButton /> */}
 
 			{/* <div className="flex flex-col w-full max-w-xl bg-isWhite h-full rounded-2xl drop-shadow-sm overflow-hidden relative">
 				<div className="flex w-full flex-row justify-between px-2 pt-1 relative">

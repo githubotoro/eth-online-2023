@@ -262,7 +262,7 @@ const ConnectPage = () => {
 					/>
 				)}
 
-				<div className="shrink-0 flex flex-row w-full bottom-0 bg-isGrayLightEmphasis5 py-1 px-2 text-md justify-between space-x-2 font-500 items-end text-isSystemDarkSecondary">
+				<div className="shrink-0 flex flex-row w-full bottom-0 bg-isSystemLightSecondary py-1 px-2 text-md justify-between space-x-2 font-500 items-end text-isSystemDarkSecondary">
 					{/* <button>Camera</button> */}
 					<textarea
 						disabled={sendingMessage === true}
@@ -301,6 +301,7 @@ const ConnectPage = () => {
 						</button>
 					)}
 				</div>
+				<div className="h-9 w-full p-1 shrink-0"></div>
 			</React.Fragment>
 		);
 	}
