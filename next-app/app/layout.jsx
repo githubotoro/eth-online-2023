@@ -36,7 +36,7 @@ const RootLayout = ({ children }) => {
 				<PushSocketConnector />
 
 				<div className="absolute inset-0 h-[calc(100dvh)] flex flex-col w-full items-center p-2 bg-isGrayLightEmphasis6 overflow-hidden">
-					<div className="flex flex-col h-full w-full max-w-xl bg-isWhite rounded-2xl drop-shadow-sm overflow-hidden">
+					<div className="flex flex-col h-full w-full max-w-xl bg-isWhite rounded-2xl drop-shadow-sm overflow-hidden relative">
 						<Indicator />
 
 						<MainConnector />
