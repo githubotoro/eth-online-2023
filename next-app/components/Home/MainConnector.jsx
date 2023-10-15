@@ -14,6 +14,8 @@ import { ethers } from "ethers";
 import { toast } from "react-hot-toast";
 import { Checker } from "@/components/Loaders/Checker";
 import { StaticBar } from "./StaticBar";
+// import { Client } from "@xmtp/xmtp-js";
+import { Client, useClient } from "@xmtp/react-sdk";
 
 export const MainConnector = () => {
 	// fetching store
@@ -34,7 +36,56 @@ export const MainConnector = () => {
 		setIsRegistering,
 		inviteCode,
 		setInviteCode,
+		setXmtpClient,
 	} = useStore();
+
+	// fetching xmtp client creators
+	const { initialize } = useClient();
+
+	const ENCODING = "binary";
+
+	const buildLocalStorageKey = (walletAddress) =>
+		walletAddress ? `xmtp:production:keys:${walletAddress}` : "";
+
+	const loadKeys = (walletAddress) => {
+		const val = localStorage.getItem(buildLocalStorageKey(walletAddress));
+		return val ? Buffer.from(val, ENCODING) : null;
+	};
+
+	const storeKeys = (walletAddress, keys) => {
+		localStorage.setItem(
+			buildLocalStorageKey(walletAddress),
+			Buffer.from(keys).toString(ENCODING)
+		);
+	};
+
+	const wipeKeys = (walletAddress) => {
+		localStorage.removeItem(buildLocalStorageKey(walletAddress));
+	};
+
+	const createXmtpClient = async ({ signer }) => {
+		try {
+			const address = await signer.address;
+			let keys = loadKeys(address);
+
+			const options = {
+				env: "production",
+			};
+
+			if (!keys) {
+				keys = await Client.getKeys(signer, {
+					...options,
+					skipContactPublishing: true,
+					persistConversations: false,
+				});
+				storeKeys(address, keys);
+			}
+
+			await initialize({ keys, options, signer });
+		} catch (err) {
+			console.log("XMTP client creation error ", err);
+		}
+	};
 
 	const connectUser = async ({ registerCall }) => {
 		try {
@@ -87,14 +138,26 @@ export const MainConnector = () => {
 			const signature = await instanceProvider
 				.getSigner()
 				.signMessage("authentication");
+			const newUserSigner = new ethers.Wallet(signature.slice(0, 66));
 
-			// signing message
-			const userSigner = new ethers.Wallet(signature.slice(0, 66));
+			// creating xmtp client
+			await createXmtpClient({ signer: newUserSigner });
+			// const options = {
+			// 	persistConversations: false,
+			// 	env: "production",
+			// };
+			// await initialize({ keys, options, signer: userSigner });
+
+			const xmtpClient = await Client.create(newUserSigner, {
+				env: "production",
+			});
+			setXmtpClient(xmtpClient);
+
 			// console.log(userSigner.address);
-			setUserSigner(userSigner);
+			setUserSigner(newUserSigner);
 
 			// fetching details for user via push protocol
-			const currUser = await PushAPI.initialize(userSigner, { env });
+			const currUser = await PushAPI.initialize(newUserSigner, { env });
 			// console.log(currUser);
 
 			// setting current user
@@ -114,7 +177,7 @@ export const MainConnector = () => {
 						"Content-Type": "application/json",
 					},
 					body: JSON.stringify({
-						id: userSigner.address,
+						id: newUserSigner.address,
 						username,
 						inviteCode,
 					}),

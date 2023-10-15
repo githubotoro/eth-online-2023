@@ -1,11 +1,11 @@
 import React from "react";
 
-import { Test3 } from "./Test3";
+import { Test4 } from "./Test4";
 
 const TestPage = () => {
 	return (
 		<React.Fragment>
-			<Test3 />
+			<Test4 />
 		</React.Fragment>
 	);
 };

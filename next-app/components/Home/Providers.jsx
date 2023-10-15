@@ -14,6 +14,7 @@ import {
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { mainnet } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
+import { XMTPProvider } from "@xmtp/react-sdk";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
 	[mainnet],
@@ -57,7 +58,7 @@ export function Providers({ children }) {
 	return (
 		<WagmiConfig config={wagmiConfig}>
 			<RainbowKitProvider chains={chains} appInfo={appInfo}>
-				{mounted && children}
+				<XMTPProvider>{mounted && children}</XMTPProvider>
 			</RainbowKitProvider>
 		</WagmiConfig>
 	);

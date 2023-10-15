@@ -37,4 +37,8 @@ export const useStore = create((set) => ({
 	setRequests: (requests) => set({ requests }),
 	trigger: false,
 	setTrigger: (trigger) => set({ trigger }),
+	xmtpClient: null,
+	setXmtpClient: (xmtpClient) => set({ xmtpClient }),
+	chatNetwork: "XMTP",
+	setChatNetwork: (chatNetwork) => set({ chatNetwork }),
 }));
