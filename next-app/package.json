@@ -10,7 +10,7 @@
 	},
 	"dependencies": {
 		"@cometh/connect-sdk": "^1.1.0",
-		"@pushprotocol/restapi": "^1.4.23",
+		"@pushprotocol/restapi": "^1.4.24",
 		"@pushprotocol/socket": "^0.5.2",
 		"@rainbow-me/rainbowkit": "^1.1.1",
 		"@tableland/sdk": "4.5.3-dev.0",

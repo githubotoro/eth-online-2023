@@ -19,7 +19,14 @@ import { ArrowUpCircle } from "@/icons";
 import clsx from "clsx";
 import { Client } from "@xmtp/xmtp-js";
 
-const GetXmtpChat = ({ currConversation, connection }) => {
+const GetXmtpChat = ({
+	currConversation,
+	connection,
+	xmtpTrigger,
+	xmtpMessageIncoming,
+	setXmtpMessageIncoming,
+	latestNotification,
+}) => {
 	if (currConversation === null) {
 		return (
 			<React.Fragment>
@@ -28,32 +35,65 @@ const GetXmtpChat = ({ currConversation, connection }) => {
 		);
 	}
 
-	const containerRef = useRef();
-	const { messages } = useMessages(currConversation);
+	const [messages, setMessages] = useState([]);
+	const [fetchingChat, setFetchingChat] = useState(false);
+	const [incomingMessage, setIncomingMessage] = useState(false);
 
-	console.log("messages are ", messages);
+	// console.log("messages are ", messages);
+
+	const fetchMessages = async () => {
+		try {
+			setFetchingChat(true);
+			const messagesInConversation = await currConversation.messages();
+			setMessages(messagesInConversation);
+			setFetchingChat(false);
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	const fetchIncomingMessages = async () => {
+		try {
+			const title = latestNotification.payload.data.asub;
+			const containsBoth = new RegExp(`${connection}.*XMTP`).test(title);
+
+			if (containsBoth) {
+				setIncomingMessage(true);
+				const messagesInConversation =
+					await currConversation.messages();
+				setMessages(messagesInConversation);
+				setIncomingMessage(false);
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	const containerRef = useRef();
+
+	useEffect(() => {
+		fetchMessages();
+	}, [xmtpTrigger]);
+
+	useEffect(() => {
+		fetchIncomingMessages();
+	}, [latestNotification]);
 
 	const scrollToBottom = () => {
 		containerRef.current.scrollTop = containerRef.current.scrollHeight;
 	};
 
-	// console.log(streamedMessages);
-
-	// useEffect(() => {
-	// 	setStreamedMessages([]);
-	// }, [currConversation]);
-
 	useEffect(() => {
 		scrollToBottom();
-	}, [messages]);
+	}, [messages, fetchingChat]);
 
 	return (
 		<div
 			ref={containerRef}
-			className="grow w-full flex-1 overflow-y-scroll p-1 space-y-1 bg-isSystemLightSecondary overflow-x-hidden"
+			className="grow w-full flex-1 overflow-y-scroll p-1 space-y-1 mt-2 bg-isSystemLightSecondary overflow-x-hidden"
 		>
 			{messages?.map((chat, idx) => {
-				const timestamp = FormatTimestamp(chat?.sentAt);
+				const timestamp = FormatTimestamp(chat?.sent);
 				const sender = chat?.senderAddress;
 				const message = chat?.content;
 				const at = timestamp.timeString;
@@ -87,7 +127,7 @@ const GetXmtpChat = ({ currConversation, connection }) => {
 					</div>
 				);
 			})}
-			{/* 
+
 			{fetchingChat === true ? (
 				<div className="w-full flex flex-col items-end">
 					<Spinner
@@ -97,7 +137,18 @@ const GetXmtpChat = ({ currConversation, connection }) => {
 				</div>
 			) : (
 				<></>
-			)} */}
+			)}
+
+			{incomingMessage === true ? (
+				<div className="w-full flex flex-col items-start">
+					<Spinner
+						classes="w-4 h-4 fill-isBlueLight"
+						ring="fill-isWhite"
+					/>
+				</div>
+			) : (
+				<></>
+			)}
 		</div>
 	);
 };
@@ -106,58 +157,94 @@ const XmtpConnectPage = () => {
 	const textareaRef = useRef();
 	const params = useParams();
 	const { canMessage } = useCanMessage();
-	const { sendMessage } = useSendMessage();
-	const { currUser, trigger, setTrigger, userSigner, xmtpClient } =
-		useStore();
+
+	const {
+		currUser,
+		trigger,
+		setTrigger,
+		userSigner,
+		xmtpClient,
+		xmtpTrigger,
+		setXmtpTrigger,
+		xmtpMessageIncoming,
+		setXmtpMessageIncoming,
+		latestNotification,
+	} = useStore();
 
 	const [exists, setExists] = useState("LOADING");
 	const [message, setMessage] = useState("");
 	const [sendingMessage, setSendingMessage] = useState(false);
 	const [currConversation, setCurrConversation] = useState(null);
 
-	const { conversations } = useConversations();
-
-	console.log("conversations are ", conversations);
-
-	const { startConversation } = useStartConversation();
-
-	const startNewConversation = async () => {
-		try {
-			const conversation = await startConversation(params.user, message);
-			setCurrConversation(conversation);
-		} catch (err) {
-			console.log(err);
-		}
-	};
-
 	const checkUserXmtp = async () => {
 		try {
 			const exists = await canMessage(params.user);
-			console.log(exists);
 			setExists(exists);
+
+			if (exists === true) {
+				const newConversation =
+					await xmtpClient.conversations.newConversation(params.user);
+				setCurrConversation(newConversation);
+			}
 		} catch (err) {
 			console.log(err);
 			return false;
 		}
 	};
 
-	const sendMessageToConversation = async () => {
-		try {
-			await sendMessage(currConversation, message);
-		} catch (err) {
-			console.log(err);
-		}
-	};
-
 	const sendMessageToUser = async () => {
 		try {
 			setSendingMessage(true);
-			if (currConversation === null) {
-				await startNewConversation();
-			} else {
-				await sendMessageToConversation();
-			}
-			setTrigger(!trigger);
+
+			// Make both API calls concurrently using async/await
+			const sendMessagePromise = currConversation.send(message);
+
+			const notifyApiPromise = fetch("/api/notify", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					recipient: params.user,
+					notification: {
+						title: `${userSigner.address} sent a message via XMTP`,
+						body: `Check out your chats to see the message.`,
+					},
+					payload: {
+						title: `${userSigner.address} sent a message via XMTP`,
+						body: `Check out your chats to see the message.`,
+						cta: `/connect/${userSigner.address}/xmtp`,
+						img: "",
+					},
+				}),
+			});
+
+			// Use Promise.all to await both promises concurrently
+			await Promise.allSettled([sendMessagePromise, notifyApiPromise]);
+
+			// await currConversation.send(message);
+
+			// await fetch("/api/notify", {
+			// 	method: "POST",
+			// 	headers: {
+			// 		"Content-Type": "application/json",
+			// 	},
+			// 	body: JSON.stringify({
+			// 		recipient: params.user,
+			// 		notification: {
+			// 			title: `${userSigner.address} sent a message via XMTP`,
+			// 			body: `Check out your chats to see the message.`,
+			// 		},
+			// 		payload: {
+			// 			title: `${userSigner.address} sent a message via XMTP`,
+			// 			body: `Check out your chats to see the message.`,
+			// 			cta: `/connect/${userSigner.address}/xmtp`,
+			// 			img: "",
+			// 		},
+			// 	}),
+			// });
+
+			setXmtpTrigger(!xmtpTrigger);
 			setSendingMessage(false);
 			setMessage("");
 			textareaRef.current.style.height = "auto";
@@ -165,60 +252,6 @@ const XmtpConnectPage = () => {
 			console.log(err);
 		}
 	};
-
-	const fetchConversation = async () => {
-		try {
-			for (let i = 0; i < conversations.length; i++) {
-				if (conversations[i].peerAddress === params.user) {
-					setCurrConversation(conversations[i]);
-				}
-			}
-		} catch (err) {
-			console.log(err);
-		}
-	};
-
-	const ListMessages = async () => {
-		try {
-			const xmtp = await Client.create(userSigner, { env: "production" });
-
-			for (const conversation of await xmtp.conversations.list()) {
-				console.log("conversation is ", conversation);
-				// All parameters are optional and can be omitted
-				const opts = {
-					// Only show messages from last 24 hours
-					startTime: new Date(
-						new Date().setDate(new Date().getDate() - 1)
-					),
-					endTime: new Date(),
-				};
-				const messagesInConversation = await conversation.messages(
-					opts
-				);
-				console.log(
-					"messages in conversation are ",
-					messagesInConversation
-				);
-			}
-
-			// const xmtp = await Client.create(userSigner, { env: "production" });
-
-			// const conversation = await xmtp.conversations.newConversation(
-			// 	params.user
-			// );
-			// const res = await conversation.send("Hello world");
-
-			// console.log(res);
-		} catch (err) {
-			console.log("List messages error ", err);
-		}
-	};
-
-	useEffect(() => {
-		if (currUser !== null) {
-			fetchConversation();
-		}
-	}, [currUser]);
 
 	useEffect(() => {
 		if (params.user !== undefined && currUser !== null) {
@@ -238,21 +271,17 @@ const XmtpConnectPage = () => {
 	} else if (exists === true) {
 		return (
 			<React.Fragment>
-				<button
-					onClick={() => {
-						ListMessages();
-					}}
-				>
-					List messages
-				</button>
 				<GetXmtpChat
 					currConversation={currConversation}
 					connection={params.user}
+					xmtpTrigger={xmtpTrigger}
+					latestNotification={latestNotification}
 				/>
 
 				<div className="shrink-0 flex flex-row w-full bottom-0 bg-isSystemLightSecondary py-1 px-2 text-md justify-between space-x-2 font-500 items-end text-isSystemDarkSecondary">
 					{/* <button>Camera</button> */}
 					<textarea
+						ref={textareaRef}
 						disabled={sendingMessage === true}
 						id="message"
 						rows="1"

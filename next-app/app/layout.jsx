@@ -40,6 +40,7 @@ const RootLayout = ({ children }) => {
 							<Indicator />
 
 							<MainConnector />
+
 							{children}
 
 							<Navigator />

@@ -20,7 +20,9 @@ export const ChatBubble = ({ message, at, isConnection }) => {
 						// : "bg-isWhite self-end border-r-[3px] border-isGreenLight"
 					)}
 				>
-					<div className="w-full flex flex-row">{message}</div>
+					<div className="w-full flex flex-row whitespace-pre">
+						{message}
+					</div>
 					<div
 						className={clsx(
 							"flex flex-col text-right w-full text-[0.6rem] font-700 leading-snug pt-[0.1rem]",

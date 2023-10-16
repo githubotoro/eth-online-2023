@@ -41,4 +41,16 @@ export const useStore = create((set) => ({
 	setXmtpClient: (xmtpClient) => set({ xmtpClient }),
 	chatNetwork: "XMTP",
 	setChatNetwork: (chatNetwork) => set({ chatNetwork }),
+	xmtpTrigger: false,
+	setXmtpTrigger: (xmtpTrigger) => set({ xmtpTrigger }),
+	pushNotificationSocket: null,
+	setPushNotificationSocket: (pushNotificationSocket) =>
+		set({ pushNotificationSocket }),
+	notificationFeed: null,
+	setNotificationFeed: (notificationFeed) => set({ notificationFeed }),
+	xmtpMessageIncoming: false,
+	setXmtpMessageIncoming: (xmtpMessageIncoming) =>
+		set({ xmtpMessageIncoming }),
+	latestNotification: false,
+	setLatestNotification: (latestNotification) => set({ latestNotification }),
 }));

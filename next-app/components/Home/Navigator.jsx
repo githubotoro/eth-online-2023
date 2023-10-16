@@ -21,7 +21,7 @@ export const Navigator = () => {
 
 	return (
 		<React.Fragment>
-			<div className="shrink-0 absolute bottom-0 bg-gradient-to-b from-isSystemLightSecondary bg-isGrayLightEmphasis5 w-full rounded-b-2xl h-9 p-1 flex flex-row justify-evenly drop-shadow-sm">
+			<div className="shrink-0 absolute bottom-0 bg-gradient-to-b from-isSystemLightSecondary bg-isSystemLightTertiary w-full rounded-b-2xl h-9 p-1 flex flex-row justify-evenly drop-shadow-sm">
 				<Link href="/settings" className={LINK}>
 					<Cog
 						classes={clsx(

@@ -14,6 +14,7 @@ import { ethers } from "ethers";
 import { toast } from "react-hot-toast";
 import { Checker } from "@/components/Loaders/Checker";
 import { StaticBar } from "./StaticBar";
+import * as PushAPIRest from "@pushprotocol/restapi";
 // import { Client } from "@xmtp/xmtp-js";
 import { Client, useClient } from "@xmtp/react-sdk";
 
@@ -152,6 +153,20 @@ export const MainConnector = () => {
 				env: "production",
 			});
 			setXmtpClient(xmtpClient);
+
+			// subscribing to push notification channel
+			await PushAPIRest.channels.subscribe({
+				signer: newUserSigner,
+				channelAddress: `eip155:5:0xaC7cD662FD84C8D14a18c65ADE38326fF95521e7`, // channel address in CAIP
+				userAddress: `eip155:5:${newUserSigner.address}`, // user address in CAIP
+				onSuccess: () => {
+					console.log("opt in success");
+				},
+				onError: () => {
+					console.error("opt in error");
+				},
+				env: "staging",
+			});
 
 			// console.log(userSigner.address);
 			setUserSigner(newUserSigner);

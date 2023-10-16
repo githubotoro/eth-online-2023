@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useStore } from "@/store";
 import React, { useState, useEffect, useRef } from "react";
-import PushVideoConnector from "../PushVideoConnector";
+// import PushVideoConnector from "../PushVideoConnector";
 import { ArrowUpCircle } from "@/icons";
 import clsx from "clsx";
 import { ChatBubble } from "@/components/Chat";
@@ -17,14 +17,14 @@ const GetPushChats = ({ chats, connection, user, fetchingChat }) => {
 		containerRef.current.scrollTop = containerRef.current.scrollHeight;
 	};
 
-	// useEffect(() => {
-	// 	scrollToBottom();
-	// }, [chats]);
+	useEffect(() => {
+		scrollToBottom();
+	}, [chats]);
 
 	return (
 		<div
 			ref={containerRef}
-			className="w-full flex-1 overflow-y-scroll p-1 space-y-1 bg-isSystemLightSecondary overflow-x-hidden"
+			className="w-full flex-1 overflow-y-scroll p-1 space-y-1 bg-isSystemLightSecondary overflow-x-hidden mt-2"
 		>
 			{chats?.toReversed().map((chat, idx) => {
 				const timestamp = FormatTimestamp(chat?.timestamp);
@@ -87,9 +87,11 @@ const PushConnectPage = () => {
 		latestFeedItem,
 		chatNetwork,
 		setChatNetwork,
+		latestNotification,
 	} = useStore();
 	const params = useParams();
 
+	const [incomingMessage, setIncomingMessage] = useState(false);
 	const [chats, setChats] = useState([]);
 	const [message, setMessage] = useState("");
 	const [sendingMessage, setSendingMessage] = useState(false);
@@ -124,6 +126,33 @@ const PushConnectPage = () => {
 		}
 	};
 
+	const fetchIncomingChats = async ({ reference = null }) => {
+		try {
+			setIncomingMessage(true);
+			const newChats = await currUser?.chat?.history(params.user, {
+				reference,
+			});
+
+			// Filter out chats that are already in the state
+			const uniqueChats = newChats.filter((newChat) => {
+				return !chats.some(
+					(existingChat) => existingChat.cid === newChat.cid
+				);
+			});
+
+			if (reference === null) {
+				// Update the state by adding the unique chats
+				setChats((prevChats) => [...uniqueChats, ...prevChats]);
+			} else {
+				// Update the state by adding the unique chats
+				setChats((prevChats) => [...prevChats, ...uniqueChats]);
+			}
+			setIncomingMessage(false);
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	const loadMore = async () => {
 		try {
 			// console.log("loading more chats");
@@ -137,10 +166,60 @@ const PushConnectPage = () => {
 	const sendMessage = async () => {
 		try {
 			setSendingMessage(true);
-			await currUser.chat.send(params.user, {
+
+			const sendMessagePromise = currUser.chat.send(params.user, {
 				type: "Text",
 				content: message,
 			});
+
+			const notifyApiPromise = fetch("/api/notify", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					recipient: params.user,
+					notification: {
+						title: `${userSigner.address} sent a message via PUSH`,
+						body: `Check out your chats to see the message.`,
+					},
+					payload: {
+						title: `${userSigner.address} sent a message via PUSH`,
+						body: `Check out your chats to see the message.`,
+						cta: `/connect/${userSigner.address}/push`,
+						img: "",
+					},
+				}),
+			});
+
+			// Use Promise.all to await both promises concurrently
+			await Promise.allSettled([sendMessagePromise, notifyApiPromise]);
+
+			// await currUser.chat.send(params.user, {
+			// 	type: "Text",
+			// 	content: message,
+			// });
+
+			// await fetch("/api/notify", {
+			// 	method: "POST",
+			// 	headers: {
+			// 		"Content-Type": "application/json",
+			// 	},
+			// 	body: JSON.stringify({
+			// 		recipient: params.user,
+			// 		notification: {
+			// 			title: `${userSigner.address} sent a message via PUSH`,
+			// 			body: `Check out your chats to see the message.`,
+			// 		},
+			// 		payload: {
+			// 			title: `${userSigner.address} sent a message via PUSH`,
+			// 			body: `Check out your chats to see the message.`,
+			// 			cta: `/connect/${userSigner.address}/push`,
+			// 			img: "",
+			// 		},
+			// 	}),
+			// });
+
 			setTrigger(!trigger);
 			setSendingMessage(false);
 			setMessage("");
@@ -153,6 +232,25 @@ const PushConnectPage = () => {
 	useEffect(() => {
 		fetchChats({ reference: null });
 	}, [currUser, trigger, latestFeedItem]);
+
+	const fetchIncomingMessages = async () => {
+		try {
+			const title = latestNotification.payload.data.asub;
+			const containsBoth = new RegExp(`${params.user}.*PUSH`).test(title);
+
+			if (containsBoth) {
+				setIncomingMessage(true);
+				fetchIncomingChats({ reference: null });
+				setIncomingMessage(false);
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	useEffect(() => {
+		fetchIncomingMessages();
+	}, [latestNotification]);
 
 	if (userSigner === null) {
 		return <div></div>;
@@ -226,6 +324,17 @@ const PushConnectPage = () => {
 								)}
 							/>
 						</button>
+					)}
+
+					{incomingMessage === true ? (
+						<div className="w-full flex flex-col items-start">
+							<Spinner
+								classes="w-4 h-4 fill-isBlueLight"
+								ring="fill-isWhite"
+							/>
+						</div>
+					) : (
+						<></>
 					)}
 				</div>
 				<div className="h-9 w-full p-1 shrink-0"></div>
