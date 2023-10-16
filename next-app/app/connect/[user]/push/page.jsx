@@ -180,12 +180,16 @@ const PushConnectPage = () => {
 				body: JSON.stringify({
 					recipient: params.user,
 					notification: {
-						title: `${userSigner.address} sent a message via PUSH`,
-						body: `Check out your chats to see the message.`,
+						title: `${
+							userSigner.address
+						} sent a message via PUSH at ${new Date().getTime()}`,
+						body: message,
 					},
 					payload: {
-						title: `${userSigner.address} sent a message via PUSH`,
-						body: `Check out your chats to see the message.`,
+						title: `${
+							userSigner.address
+						} sent a message via PUSH at ${new Date().getTime()}`,
+						body: message,
 						cta: `/connect/${userSigner.address}/push`,
 						img: "",
 					},

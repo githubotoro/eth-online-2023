@@ -207,11 +207,15 @@ const XmtpConnectPage = () => {
 				body: JSON.stringify({
 					recipient: params.user,
 					notification: {
-						title: `${userSigner.address} sent a message via XMTP`,
+						title: `${
+							userSigner.address
+						} sent a message via XMTP at ${new Date().getTime()}`,
 						body: `Check out your chats to see the message.`,
 					},
 					payload: {
-						title: `${userSigner.address} sent a message via XMTP`,
+						title: `${
+							userSigner.address
+						} sent a message via XMTP at ${new Date().getTime()}`,
 						body: `Check out your chats to see the message.`,
 						cta: `/connect/${userSigner.address}/xmtp`,
 						img: "",

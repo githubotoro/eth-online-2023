@@ -11,6 +11,7 @@ import {
 	PushSocketConnector,
 	Navigator,
 } from "@/components/Home";
+import { RenderChildren } from "./RenderChildren";
 
 const inter = Inter({
 	subsets: ["latin"],
@@ -41,7 +42,9 @@ const RootLayout = ({ children }) => {
 
 							<MainConnector />
 
-							{children}
+							<RenderChildren children={children} />
+
+							{/* {children} */}
 
 							<Navigator />
 						</div>

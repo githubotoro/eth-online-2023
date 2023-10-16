@@ -24,7 +24,7 @@ export const StaticBar = ({ username, address }) => {
 
 	return (
 		<React.Fragment>
-			<div className="shrink-0 rounded-2xl bg-gradient-to-b from-isIndgioDarkEmphasis border border-isGrayLightEmphasis6 to-isIndigoLight mt-1 mx-1 p-1">
+			<div className="shrink-0 rounded-2xl bg-gradient-to-b from-isIndgioDarkEmphasis border border-isGrayLightEmphasis6 to-isIndigoLight mt-4 mx-1 p-1">
 				<div
 					className={clsx(
 						"w-full text-center text-lg font-600 text-isSystemLightPrimary hover:text-isSystemLightSecondary items-center flex flex-col drop-shadow-sm",

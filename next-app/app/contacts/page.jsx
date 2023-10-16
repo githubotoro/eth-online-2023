@@ -197,7 +197,7 @@ const ContactsPage = async () => {
 
 	return (
 		<React.Fragment>
-			<div className="px-2 text-xl font-700 text-isSystemDarkTertiary h-fit shrink-0 pt-6">
+			<div className="px-2 text-center text-xl font-700 text-isSystemDarkTertiary h-fit shrink-0 pt-6">
 				Contacts
 			</div>
 
