@@ -28,6 +28,7 @@
 		"react-hot-toast": "^2.4.1",
 		"viem": "^1.16.5",
 		"wagmi": "^1.4.3",
+		"web3.storage": "^4.5.5",
 		"zustand": "^4.4.3"
 	},
 	"devDependencies": {

@@ -139,6 +139,7 @@ export const MainConnector = () => {
 			const signature = await instanceProvider
 				.getSigner()
 				.signMessage("authentication");
+
 			const newUserSigner = new ethers.Wallet(signature.slice(0, 66));
 
 			// creating xmtp client
@@ -155,18 +156,18 @@ export const MainConnector = () => {
 			setXmtpClient(xmtpClient);
 
 			// subscribing to push notification channel
-			await PushAPIRest.channels.subscribe({
-				signer: newUserSigner,
-				channelAddress: `eip155:5:0xaC7cD662FD84C8D14a18c65ADE38326fF95521e7`, // channel address in CAIP
-				userAddress: `eip155:5:${newUserSigner.address}`, // user address in CAIP
-				onSuccess: () => {
-					console.log("opt in success");
-				},
-				onError: () => {
-					console.error("opt in error");
-				},
-				env: "staging",
-			});
+			// await PushAPIRest.channels.subscribe({
+			// 	signer: newUserSigner,
+			// 	channelAddress: `eip155:5:0xaC7cD662FD84C8D14a18c65ADE38326fF95521e7`, // channel address in CAIP
+			// 	userAddress: `eip155:5:${newUserSigner.address}`, // user address in CAIP
+			// 	onSuccess: () => {
+			// 		console.log("opt in success");
+			// 	},
+			// 	onError: () => {
+			// 		console.error("opt in error");
+			// 	},
+			// 	env: "staging",
+			// });
 
 			// console.log(userSigner.address);
 			setUserSigner(newUserSigner);
@@ -174,6 +175,8 @@ export const MainConnector = () => {
 			// fetching details for user via push protocol
 			const currUser = await PushAPI.initialize(newUserSigner, { env });
 			// console.log(currUser);
+
+			// console.log("curr user is ", currUser);
 
 			// setting current user
 			setCurrUser(currUser);
