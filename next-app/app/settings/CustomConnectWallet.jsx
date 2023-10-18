@@ -38,7 +38,7 @@ export const CustomConnectWallet = () => {
 										onClick={openConnectModal}
 										type="button"
 										className={clsx(
-											"w-full text-lg font-600 bg-isBlueDark hover:bg-isBlueLight p-1 rounded-lg drop-shadow-sm text-isSystemLightSecondary hover:text-isWhite",
+											"w-full text-[1rem] font-600 bg-isBlueDark hover:bg-isBlueLight p-2 rounded-lg drop-shadow-sm text-isSystemLightSecondary hover:text-isWhite",
 											ANIMATE
 										)}
 									>

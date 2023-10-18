@@ -268,7 +268,7 @@ const XmtpConnectPage = () => {
 			<Checker
 				cta="Fetching Chats"
 				classes="h-6 w-6 fill-isGreenLight"
-				ring="fill-isSystemLightSecondary"
+				ring="fill-isSystemLightTertiary"
 				container="grow"
 			/>
 		);

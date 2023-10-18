@@ -231,7 +231,7 @@ export const MainConnector = () => {
 	}, []);
 
 	const GREEN_SPINNER = "fill-isGreenLight h-6 w-6";
-	const RING = "fill-isGrayLightEmphasis6";
+	const RING = "fill-isSystemLightTertiary";
 
 	if (isConnecting === true) {
 		return (

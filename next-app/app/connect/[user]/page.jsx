@@ -19,7 +19,7 @@ const UserPage = () => {
 				cta="Connecting..."
 				container="grow"
 				classes="h-6 w-6 fill-isOrangeLight"
-				ring="fill-isSystemLightSecondary"
+				ring="fill-isSystemLightTertiary"
 			/>
 		);
 	}

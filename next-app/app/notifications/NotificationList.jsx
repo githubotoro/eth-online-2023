@@ -88,7 +88,7 @@ export const NotificationList = () => {
 		return (
 			<Checker
 				cta="Fetching Notifications"
-				container="grow bg-isSystemLightSecondary"
+				container="grow fill-isSystemLightSecondary"
 				classes="fill-isBlueLight h-6 w-6"
 				ring="fill-isWhite"
 			/>
