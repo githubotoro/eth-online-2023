@@ -53,4 +53,10 @@ export const useStore = create((set) => ({
 		set({ xmtpMessageIncoming }),
 	latestNotification: false,
 	setLatestNotification: (latestNotification) => set({ latestNotification }),
+	ogAddress: null,
+	setOgAddress: (ogAddress) => set({ ogAddress }),
+	web3Bio: [],
+	setWeb3Bio: (web3Bio) => set({ web3Bio }),
+	fetchingBio: true,
+	setFetchingBio: (fetchingBio) => set({ fetchingBio }),
 }));

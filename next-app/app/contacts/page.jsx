@@ -261,7 +261,6 @@ const ContactsPage = async () => {
 				<div className="h-[0.8rem] w-[0.8rem] p-1 bg-gradient-to-br from-isGreenDark to-isGreenLightEmphasis rounded-full border-2 border-isGrayLightEmphasis6 drop-shadow-sm animate-pulse"></div>
 				<div>{sortedUsers.length} Network Users</div>
 			</div>
-			<div className="h-9 w-full p-1 shrink-0"></div>
 		</React.Fragment>
 	);
 };

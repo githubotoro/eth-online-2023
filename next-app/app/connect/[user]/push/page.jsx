@@ -341,7 +341,6 @@ const PushConnectPage = () => {
 						<></>
 					)}
 				</div>
-				<div className="h-9 w-full p-1 shrink-0"></div>
 			</React.Fragment>
 		);
 	}

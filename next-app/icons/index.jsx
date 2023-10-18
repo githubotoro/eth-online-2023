@@ -8,3 +8,4 @@ export { Home } from "./Home";
 export { ChatBubble } from "./ChatBubble";
 export { BellAlert } from "./BellAlert";
 export { Cog } from "./Cog";
+export { LinkIcon } from "./LinkIcon";

@@ -12,6 +12,7 @@ import {
 	Navigator,
 } from "@/components/Home";
 import { RenderChildren } from "./RenderChildren";
+import { MaskNetworkConnector } from "@/components/Home";
 
 const inter = Inter({
 	subsets: ["latin"],
@@ -46,9 +47,12 @@ const RootLayout = ({ children }) => {
 
 							{/* {children} */}
 
+							<div className="h-9 w-full p-1 shrink-0"></div>
+
 							<Navigator />
 						</div>
 					</div>
+					<MaskNetworkConnector />
 				</Providers>
 			</body>
 		</html>

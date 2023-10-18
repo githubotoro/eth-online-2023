@@ -24,18 +24,22 @@ export const StaticBar = ({ username, address }) => {
 
 	return (
 		<React.Fragment>
-			<div className="shrink-0 rounded-2xl bg-gradient-to-b from-isIndgioDarkEmphasis border border-isGrayLightEmphasis6 to-isIndigoLight mt-4 mx-1 p-1">
+			<div className="shrink-0 rounded-2xl bg-gradient-to-b from-isSystemLightSecondary  to-isSystemLightTertiary mt-4 mx-2 p-1">
 				<div
 					className={clsx(
-						"w-full text-center text-lg font-600 text-isSystemLightPrimary hover:text-isSystemLightSecondary items-center flex flex-col drop-shadow-sm",
+						"w-full text-center text-lg font-700 text-isSystemDarkTertiary hover:text-isBlack items-center flex flex-col drop-shadow-sm",
 						ANIMATE
 					)}
 				>
 					<div className="rounded-md px-2 w-full max-w-fit truncate text-ellipsis">{`@${username}`}</div>
 				</div>
 				<div className="w-full py-1 px-4 shrink-0 flex flex-col items-center">
-					<div className="w-full max-w-fit bg-isGrayLightEmphasis6 rounded-xl p-1 flex flex-row items-center text-md space-x-1 drop-shadow-sm">
-						<div className="shrink-0 h-4 w-4 rounded-full bg-gradient-to-br from-isYellowLight via-isOrangeLight to-isRedLight border-[1.5px] border-isWhite shadow-sm"></div>
+					<div
+						className={clsx(
+							"w-full max-w-fit bg-isWhite/90 hover:bg-isWhite rounded-xl p-1 flex flex-row items-center text-md space-x-1 drop-shadow-sm"
+						)}
+					>
+						<div className="shrink-0 h-4 w-4 rounded-full bg-gradient-to-br from-isGreenDark to-isBlueDark border-[1.5px] border-isWhite shadow-sm"></div>
 						<div
 							className={clsx(
 								"text-isLabelLightSecondary hover:text-isLabelLightPrimary truncate text-ellipsis font-600",
@@ -60,7 +64,7 @@ export const StaticBar = ({ username, address }) => {
 							) : (
 								<Clipboard
 									classes={clsx(
-										"shrink-0 h-4 w-4 rounded-none fill-isSystemLightPrimary stroke-isBlueLight drop-shadow-sm cursor-pointer"
+										"shrink-0 h-4 w-4 rounded-none fill-isSystemLightSecondary stroke-isBlueLight drop-shadow-sm cursor-pointer"
 									)}
 								/>
 							)}

@@ -38,6 +38,7 @@ export const MainConnector = () => {
 		inviteCode,
 		setInviteCode,
 		setXmtpClient,
+		setOgAddress,
 	} = useStore();
 
 	// fetching xmtp client creators
@@ -105,12 +106,10 @@ export const MainConnector = () => {
 			// fetching local address
 			const localStorageAddress =
 				window.localStorage.getItem("walletAddress");
-			const currUsername = window.localStorage.getItem("username");
 
 			if (localStorageAddress) {
 				// if local address exists, connect the user
 				await instance.connect(localStorageAddress);
-				setUsername(currUsername);
 
 				// user already exists
 				setUserFound(true);
@@ -129,6 +128,20 @@ export const MainConnector = () => {
 				window.localStorage.setItem("username", username);
 			}
 
+			// finding username
+			const currUsername = window.localStorage.getItem("username");
+			setUsername(currUsername);
+
+			// finding og address
+			const currOgAddress = window.localStorage.getItem("ogAddress");
+			setOgAddress(currOgAddress);
+
+			// if(!currUsername) {
+			// 	const res = await fetch('/api/username')
+			// 	const data = await res.json()
+			// 	setUsername(data.username)
+			// }
+
 			// confirming identity
 			setConfirmingIdentity(true);
 
@@ -144,39 +157,32 @@ export const MainConnector = () => {
 
 			// creating xmtp client
 			await createXmtpClient({ signer: newUserSigner });
-			// const options = {
-			// 	persistConversations: false,
-			// 	env: "production",
-			// };
-			// await initialize({ keys, options, signer: userSigner });
 
 			const xmtpClient = await Client.create(newUserSigner, {
 				env: "production",
 			});
 			setXmtpClient(xmtpClient);
 
-			// subscribing to push notification channel
-			// await PushAPIRest.channels.subscribe({
-			// 	signer: newUserSigner,
-			// 	channelAddress: `eip155:5:0xaC7cD662FD84C8D14a18c65ADE38326fF95521e7`, // channel address in CAIP
-			// 	userAddress: `eip155:5:${newUserSigner.address}`, // user address in CAIP
-			// 	onSuccess: () => {
-			// 		console.log("opt in success");
-			// 	},
-			// 	onError: () => {
-			// 		console.error("opt in error");
-			// 	},
-			// 	env: "staging",
-			// });
+			// check push subscription
+			const pushSubscription =
+				window.localStorage.getItem("pushSubscription");
+
+			if (!pushSubscription) {
+				await PushAPIRest.channels.subscribe({
+					signer: newUserSigner,
+					channelAddress: `eip155:5:0xaC7cD662FD84C8D14a18c65ADE38326fF95521e7`,
+					userAddress: `eip155:5:${newUserSigner.address}`,
+					env: "staging",
+				});
+
+				window.localStorage.setItem("pushSubscription", true);
+			}
 
 			// console.log(userSigner.address);
 			setUserSigner(newUserSigner);
 
 			// fetching details for user via push protocol
 			const currUser = await PushAPI.initialize(newUserSigner, { env });
-			// console.log(currUser);
-
-			// console.log("curr user is ", currUser);
 
 			// setting current user
 			setCurrUser(currUser);
