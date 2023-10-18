@@ -9,7 +9,6 @@ import Link from "next/link";
 
 export const Navigator = () => {
 	const pathname = usePathname();
-	console.log(pathname.slice(0, 8));
 
 	const BASE_ICON = clsx(
 		"drop-shadow-sm stroke-none cursor-pointer",
