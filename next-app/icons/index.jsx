@@ -12,3 +12,4 @@ export { LinkIcon } from "./LinkIcon";
 export { ChatBubbleLeftRight } from "./ChatBubbleLeftRight";
 export { Phone } from "./Phone";
 export { Camera } from "./Camera";
+export { Wifi } from "./Wifi";

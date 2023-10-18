@@ -25,7 +25,8 @@ export const Navigator = () => {
 					<Cog
 						classes={clsx(
 							BASE_ICON,
-							pathname.slice(0, 10) === "/settings"
+							pathname.slice(0, "/settings".length) ===
+								"/settings"
 								? ACTIVE
 								: PASSIVE
 						)}
@@ -35,7 +36,8 @@ export const Navigator = () => {
 					<Users
 						classes={clsx(
 							BASE_ICON,
-							pathname.slice(0, 10) === "/contacts"
+							pathname.slice(0, "/contacts".length) ===
+								"/contacts"
 								? ACTIVE
 								: PASSIVE
 						)}
@@ -53,7 +55,7 @@ export const Navigator = () => {
 					<ChatBubble
 						classes={clsx(
 							BASE_ICON,
-							pathname.slice(0, 8) === "/connect"
+							pathname.slice(0, "/connect".length) === "/connect"
 								? ACTIVE
 								: PASSIVE
 						)}
@@ -63,7 +65,8 @@ export const Navigator = () => {
 					<BellAlert
 						classes={clsx(
 							BASE_ICON,
-							pathname.slice(0, 15) === "/notifications"
+							pathname.slice(0, "/notifications".length) ===
+								"/notifications"
 								? ACTIVE
 								: PASSIVE
 						)}

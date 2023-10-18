@@ -13,7 +13,8 @@ const NotificationsPage = () => {
 
 	return (
 		<React.Fragment>
-			<div className="mt-4 pb-1 px-2 shrink-0 text-xl text-center font-700 text-isSystemDarkPrimary">
+			<hr className="bg-isSeparatorLight m-2" />
+			<div className="pb-2 px-2 shrink-0 text-xl text-center font-700 text-isSystemDarkPrimary">
 				Recent Notifications
 			</div>
 			<NotificationList />

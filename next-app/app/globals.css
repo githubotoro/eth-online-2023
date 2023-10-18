@@ -36,3 +36,26 @@ section {
 	height: 60vh;
 	overflow-y: scroll;
 }
+
+.fade-enter {
+	opacity: 0;
+}
+
+.fade-enter-active {
+	transition: opacity 0.3s ease-in;
+}
+
+/* Slide in from the left */
+.slide-enter {
+	transform: translateX(-100%);
+}
+
+/* Slide out to the right */
+.slide-exit {
+	transform: translateX(100%);
+}
+
+.slide-enter-active,
+.slide-exit-active {
+	transition: transform 1s ease-in-out;
+}
