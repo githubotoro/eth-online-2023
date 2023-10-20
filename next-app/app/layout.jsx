@@ -13,6 +13,7 @@ import {
 } from "@/components/Home";
 import { RenderChildren } from "./RenderChildren";
 import { MaskNetworkConnector } from "@/components/Home";
+import { VideoConnector } from "@/components/Video";
 
 const inter = Inter({
 	subsets: ["latin"],
@@ -42,6 +43,8 @@ const RootLayout = ({ children }) => {
 							<Indicator />
 
 							<MainConnector />
+
+							<VideoConnector />
 
 							<RenderChildren children={children} />
 

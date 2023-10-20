@@ -39,6 +39,7 @@ export const MainConnector = () => {
 		setInviteCode,
 		setXmtpClient,
 		setOgAddress,
+		onCall,
 	} = useStore();
 
 	// fetching xmtp client creators
@@ -156,12 +157,12 @@ export const MainConnector = () => {
 			const newUserSigner = new ethers.Wallet(signature.slice(0, 66));
 
 			// creating xmtp client
-			await createXmtpClient({ signer: newUserSigner });
+			// await createXmtpClient({ signer: newUserSigner });
 
-			const xmtpClient = await Client.create(newUserSigner, {
-				env: "production",
-			});
-			setXmtpClient(xmtpClient);
+			// const xmtpClient = await Client.create(newUserSigner, {
+			// 	env: "production",
+			// });
+			// setXmtpClient(xmtpClient);
 
 			// check push subscription
 			const pushSubscription =
@@ -233,7 +234,9 @@ export const MainConnector = () => {
 	const GREEN_SPINNER = "fill-isGreenLight h-6 w-6";
 	const RING = "fill-isSystemLightTertiary";
 
-	if (isConnecting === true) {
+	if (onCall === true) {
+		return <React.Fragment></React.Fragment>;
+	} else if (isConnecting === true) {
 		return (
 			<React.Fragment>
 				<Checker cta="Signing In" classes={GREEN_SPINNER} ring={RING} />

@@ -10,12 +10,22 @@ import clsx from "clsx";
 import { ChatBubbleLeftRight, Phone, Camera } from "@/icons";
 import Image from "next/image";
 import Link from "next/link";
+import { ANIMATE } from "@/components/Constants";
+// import { useStore } from "@/store";
 
 const ProfilePage = () => {
 	const params = useParams();
 	if (!ethers.utils.isAddress(params.user)) {
 		return;
 	}
+
+	const {
+		setOnCall,
+		setPeerAddress,
+		setCallType,
+		setIsCaller,
+		setIsCallAccepted,
+	} = useStore();
 
 	const [loadingBio, setLoadingBio] = useState(true);
 	const [web3Bio, setWeb3Bio] = useState(null);
@@ -70,20 +80,46 @@ const ProfilePage = () => {
 					</div>
 					<div className="w-full place-content-center flex flex-col items-center">
 						<div className="w-full flex flex-row mt-2 max-w-xs">
-							<div className="w-1/6 aspect-square bg-isGreenLight rounded-xl shadow-sm mr-2 p-2">
+							<button
+								onClick={() => {
+									setIsCallAccepted(true);
+									setIsCaller(true);
+									setCallType("aduio");
+									setPeerAddress(params.user);
+									setOnCall(true);
+								}}
+								className={clsx(
+									"w-1/6 aspect-square bg-isGreenLight hover:bg-isGreenLightEmphasis rounded-xl shadow-sm mr-2 p-2 group",
+									ANIMATE
+								)}
+							>
 								<Phone
 									classes={clsx(
-										"fill-isSystemLightSecondary"
+										"fill-isSystemLightSecondary group-hover:fill-isWhite",
+										ANIMATE
 									)}
 								/>
-							</div>
-							<div className="w-1/6 aspect-square bg-isBlueLight rounded-xl shadow-sm mr-2 p-2">
+							</button>
+							<button
+								onClick={() => {
+									setIsCallAccepted(true);
+									setIsCaller(true);
+									setCallType("video");
+									setPeerAddress(params.user);
+									setOnCall(true);
+								}}
+								className={clsx(
+									"w-1/6 aspect-square bg-isBlueLight hover:bg-isBlueLightEmphasis rounded-xl shadow-sm mr-2 p-2 group",
+									ANIMATE
+								)}
+							>
 								<Camera
 									classes={clsx(
-										"fill-isSystemLightSecondary"
+										"fill-isSystemLightSecondary group-hover:fill-isWhite",
+										ANIMATE
 									)}
 								/>
-							</div>
+							</button>
 							<div className="w-1/6 shrink-0 aspect-square bg-isSystemLightSecondary rounded-xl p-2 rounded-r-none">
 								<ChatBubbleLeftRight
 									classes={clsx("fill-isOrangeLight")}

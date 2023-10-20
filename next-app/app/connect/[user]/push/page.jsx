@@ -66,7 +66,7 @@ const GetPushChats = ({ chats, connection, user, fetchingChat }) => {
 				<div className="w-full flex flex-col items-end">
 					<Spinner
 						classes="w-4 h-4 fill-isGreenLight"
-						ring="fill-isWhite"
+						ring="fill-isSystemLightSecondary"
 					/>
 				</div>
 			) : (
@@ -113,11 +113,33 @@ const PushConnectPage = () => {
 			});
 
 			if (reference === null) {
+				const filteredChats = [...uniqueChats, ...chats];
+				let finalChats = [];
+				let keys = new Set();
+				for (let i = 0; i < filteredChats.length; i++) {
+					const key = filteredChats[i].cid;
+					if (!keys.has(key)) {
+						finalChats.push(filteredChats[i]);
+						keys.add(key);
+					}
+				}
+
 				// Update the state by adding the unique chats
-				setChats((prevChats) => [...uniqueChats, ...prevChats]);
+				setChats(finalChats);
 			} else {
+				const filteredChats = [...chats, ...uniqueChats];
+				let finalChats = [];
+				let keys = new Set();
+				for (let i = 0; i < filteredChats.length; i++) {
+					const key = filteredChats[i].cid;
+					if (!keys.has(key)) {
+						finalChats.push(filteredChats[i]);
+						keys.add(key);
+					}
+				}
+
 				// Update the state by adding the unique chats
-				setChats((prevChats) => [...prevChats, ...uniqueChats]);
+				setChats(finalChats);
 			}
 			setFetchingChats(false);
 			setFetchingChat(false);
@@ -235,11 +257,19 @@ const PushConnectPage = () => {
 
 	useEffect(() => {
 		fetchChats({ reference: null });
-	}, [currUser, trigger, latestFeedItem]);
+	}, [currUser, trigger, latestFeedItem, latestNotification]);
 
 	const fetchIncomingMessages = async () => {
 		try {
-			const title = latestNotification.payload.data.asub;
+			if (
+				latestNotification === null ||
+				latestNotification === undefined ||
+				latestNotification === ""
+			) {
+				return;
+			}
+
+			const title = latestNotification?.payload?.data?.asub;
 			const containsBoth = new RegExp(`${params.user}.*PUSH`).test(title);
 
 			if (containsBoth) {

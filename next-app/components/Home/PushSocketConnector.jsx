@@ -81,7 +81,6 @@ export const PushSocketConnector = () => {
 		if (userSigner !== null) {
 			const connectionObject = createSocketConnection({
 				user: `eip155:${userSigner.address}`,
-				socketType: "chat",
 				env,
 				socketOptions: { autoConnect: true, reconnectionAttempts: 3 },
 			});
