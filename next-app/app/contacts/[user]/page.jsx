@@ -150,12 +150,12 @@ const ProfilePage = () => {
 						</div>
 					</div>
 					<div className="w-full place-content-center flex flex-col items-center">
-						<div className="w-full flex flex-row mt-2 max-w-xs">
+						<div className="w-full flex flex-row mt-2 max-w-xs items-center place-content-center">
 							<button
 								onClick={() => {
 									setIsCallAccepted(true);
 									setIsCaller(true);
-									setCallType("aduio");
+									setCallType("audio");
 									setPeerAddress(params.user);
 									setOnCall(true);
 								}}
@@ -196,12 +196,12 @@ const ProfilePage = () => {
 									classes={clsx("fill-isOrangeLight")}
 								/>
 							</div>
-							<div className="w-fit bg-isSystemLightSecondary rounded-lg rounded-l-none flex flex-col justify-between px-1 md:py-[0.15rem] ">
+							<div className="w-fit bg-isSystemLightSecondary rounded-lg rounded-l-none flex flex-col justify-between px-1 md:py-1 h-full">
 								<Link
 									href={`/connect/${params.user}/push`}
 									className="contents"
 								>
-									<div className="h-1/2 flex flex-col items-end place-content-center w-full">
+									<div className="flex flex-col items-end place-content-center w-full mb-1">
 										<div
 											className={clsx(
 												"w-[4rem] flex flex-row items-center bg-isSystemLightTertiary shadow-sm rounded-md space-x-1 hover:bg-isSystemLightPrimary/50",

@@ -74,6 +74,7 @@ export const VideoConnector = () => {
 
 			const callingRegex = /calling/;
 			const videTypeRegex = /video/;
+			const endedRegex = /ended/;
 
 			if (callingRegex.test(title) && onCall === false) {
 				if (videTypeRegex.test(title)) {
@@ -85,6 +86,24 @@ export const VideoConnector = () => {
 				setOnCall(true);
 				setPeerAddress(peer);
 				setCallId(message);
+			} else if (endedRegex.test(title)) {
+				if (isCallAccepted === true) {
+					const stream = webcamVideo.current.srcObject;
+					const tracks = stream.getTracks();
+
+					tracks.forEach((track) => {
+						track.stop();
+					});
+
+					webcamVideo.current.srcObject = null;
+				}
+
+				setOnCall(false);
+				setCallType(null);
+				setIsCaller(false);
+				setIsCallAccepted(false);
+				setPeerAddress(null);
+				setCallId(null);
 			}
 		} catch (err) {
 			console.log(err);
