@@ -2,6 +2,7 @@ import clsx from "clsx";
 import React from "react";
 import { ANIMATE } from "../Constants";
 import Image from "next/image";
+import { ExclamationTriangle } from "@/icons";
 
 export const GetBio = ({ ogAddress, web3Bio, CTA_CLASSES, flag }) => {
 	if (ogAddress !== undefined && ogAddress !== null) {
@@ -9,6 +10,11 @@ export const GetBio = ({ ogAddress, web3Bio, CTA_CLASSES, flag }) => {
 			<React.Fragment>
 				{web3Bio.length === 0 ? (
 					<div className={CTA_CLASSES}>
+						{/* <ExclamationTriangle
+							classes={clsx(
+								"w-6 h-6 bg-isRedDark fill-isSystemDarkSecondary inline-block"
+							)}
+						/> */}
 						No major on-chain profiles were found.
 					</div>
 				) : (
@@ -106,7 +112,7 @@ export const GetBio = ({ ogAddress, web3Bio, CTA_CLASSES, flag }) => {
 	} else if (flag === "settings") {
 		return (
 			<div className="w-full h-full rounded-2xl items-center place-content-center text-center flex flex-col text-[0.8rem] text-isLabelLightSecondary space-y-1 leading-tight font-600">
-				<span className="text-isSystemDarkSecondary text-[1.2rem] max-w-xs">
+				<span className="text-isSystemDarkSecondary text-[1rem] max-w-xs">
 					You <b>haven't linked</b> any on-chain profiles yet.
 				</span>
 				<br />

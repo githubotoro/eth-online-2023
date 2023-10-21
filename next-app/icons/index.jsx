@@ -15,3 +15,5 @@ export { Camera } from "./Camera";
 export { Wifi } from "./Wifi";
 export { UserCircle } from "./UserCircle";
 export { Key } from "./Key";
+export { ExclamationTriangle } from "./ExclamationTriangle";
+export { Wallet } from "./Wallet";

@@ -1,6 +1,10 @@
 "use client";
 
+import { Moon } from "@/icons/Moon";
 import { useState, useEffect } from "react";
+import clsx from "clsx";
+import { Sun } from "@/icons/Sun";
+import { ChartBar } from "@/icons/ChartBar";
 
 export const Indicator = () => {
 	const formatTimestamp = (timestamp) => {
@@ -41,6 +45,7 @@ export const Indicator = () => {
 		return {
 			dateString,
 			timeString,
+			hours: date.getHours(),
 		};
 	};
 
@@ -59,10 +64,38 @@ export const Indicator = () => {
 	});
 
 	return (
-		<div className="shrink-0 flex w-full flex-row justify-between pt-1 relative overflow-hidden rounded-2xl">
-			<div className="pl-2">{timestamp?.timeString}</div>
+		<div className="shrink-0 flex w-full flex-row justify-between pt-1 relative overflow-hidden rounded-2xl font-500">
+			<div className="pl-2 space-x-2 ">
+				{timestamp?.timeString}
+				{timestamp?.hours >= 20 || timestamp?.hours <= 8 ? (
+					<Moon
+						classes={clsx(
+							"fill-isSystemDarkSecondary h-3 w-3 inline-block ml-1 mb-[0.2rem]"
+						)}
+					/>
+				) : (
+					<></>
+				)}
 
-			<div className="pr-2">{timestamp?.dateString}</div>
+				{timestamp?.hours > 8 && timestamp?.hours < 20 ? (
+					<Sun
+						classes={clsx(
+							"fill-isSystemDarkSecondary h-3 w-3 inline-block ml-1 mb-[0.2rem]"
+						)}
+					/>
+				) : (
+					<></>
+				)}
+			</div>
+
+			<div className="pr-2">
+				<ChartBar
+					classes={clsx(
+						"fill-isSystemDarkSecondary h-3 w-3 inline-block mr-1 mb-[0.2rem]"
+					)}
+				/>
+				{timestamp?.dateString}
+			</div>
 
 			<div className="absolute w-full flex flex-row items-center -mt-1">
 				<div className="bg-isWhite flex-grow text-isWhite rounded-md -z-10 text-center">

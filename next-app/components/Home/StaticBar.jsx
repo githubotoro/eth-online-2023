@@ -2,6 +2,7 @@ import clsx from "clsx";
 import React, { useState } from "react";
 import { ANIMATE } from "@/components/Constants";
 import { CheckCircle, Clipboard } from "@/icons";
+import { Moon } from "@/icons/Moon";
 
 export const StaticBar = ({ username, address }) => {
 	const [copying, setCopying] = useState(false);

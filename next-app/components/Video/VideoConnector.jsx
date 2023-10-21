@@ -3,7 +3,7 @@
 import { useStore } from "@/store";
 import React, { useEffect, useRef, useState } from "react";
 
-import { db } from "@/firebase/config";
+import { db } from "@/firebase/video";
 import {
 	getFirestore,
 	doc,

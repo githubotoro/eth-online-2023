@@ -131,7 +131,12 @@ const ProfilePage = () => {
 									className="contents"
 								>
 									<div className="h-1/2 flex flex-col items-end place-content-center w-full">
-										<div className="w-[4rem] flex flex-row items-center bg-isSystemLightTertiary shadow-sm rounded-md space-x-1">
+										<div
+											className={clsx(
+												"w-[4rem] flex flex-row items-center bg-isSystemLightTertiary shadow-sm rounded-md space-x-1 hover:bg-isSystemLightPrimary/50",
+												ANIMATE
+											)}
+										>
 											<div className="relative w-[1.3rem] h-[1.3rem] rounded-md overflow-hidden shadow-sm">
 												<Image
 													src="/assets/push-logo.jpeg"
@@ -151,7 +156,12 @@ const ProfilePage = () => {
 									className="contents"
 								>
 									<div className="h-1/2 flex flex-col items-end place-content-center w-full">
-										<div className="w-[4rem] flex flex-row items-center bg-isSystemLightTertiary shadow-sm rounded-md space-x-1">
+										<div
+											className={clsx(
+												"w-[4rem] flex flex-row items-center bg-isSystemLightTertiary shadow-sm rounded-md space-x-1 hover:bg-isSystemLightPrimary/50",
+												ANIMATE
+											)}
+										>
 											<div className="relative w-[1.3rem] h-[1.3rem] rounded-md overflow-hidden shadow-sm">
 												<Image
 													src="/assets/xmtp-logo.png"

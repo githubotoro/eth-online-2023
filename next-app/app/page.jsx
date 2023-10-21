@@ -47,7 +47,7 @@ const HomePage = () => {
 			<div className="w-full shrink-0 px-2">
 				<div
 					className={clsx(
-						"w-full rounded-xl bg-isGreenDarkEmphasis p-2 text-center font-600 text-lg shadow-sm text-isWhite hover:bg-isGreenLight hover:text-isSystemLightSecondary flex flex-row items-center place-content-center space-x-2",
+						"w-full rounded-xl bg-isGreenDarkEmphasis py-1 px-2 text-center font-600 text-lg shadow-sm text-isWhite hover:bg-isGreenLight hover:text-isSystemLightSecondary flex flex-row items-center place-content-center space-x-2",
 						ANIMATE
 					)}
 				>
@@ -70,31 +70,52 @@ const HomePage = () => {
 					<span className="px-2" />
 					<b>You</b> are currently at
 					<Home classes={INLINE_ICON} /> -- all available{" "}
-					<span className="underline decoration-dashed underline-offset-2">
-						network users
-					</span>{" "}
+					{/* <span className="underline decoration-dashed underline-offset-2"> */}
+					network users
+					{/* </span>{" "} */}
 					can be found at <Phone classes={INLINE_ICON} /> --
 					<span className="text-isBlueLight">click</span> on their
-					profiles to see their web3 identities -- powered by Mask
-					Network. <ChatBubble classes={INLINE_ICON} />
-					&nbsp; is where you can find all your recent chats.
+					profiles to see their web3 identities -- powered by{" "}
+					<span className="text-isPurpleLight">Mask Network</span>.{" "}
+					<ChatBubble classes={INLINE_ICON} />
+					&nbsp; is where you can find all your recent chats --
+					powered by <span className="text-isIndigoLight">
+						XMTP
+					</span>{" "}
+					and <span className="text-isPinkLight">Push Protocol</span>.
 					Notifications can be accessed from{" "}
-					<BellAlert classes={INLINE_ICON} /> -- powered by Push
-					Protocol.
+					<BellAlert classes={INLINE_ICON} /> -- powered by{" "}
+					<span className="text-isTealLight">Push Notifications</span>
+					.
 					<br /> <br />
 					<span className="px-2" /> For messaging, you have 2 options
-					-- on PUSH network, your first message will be a connection
-					request, and you can only chat further if your connection
-					request is accepted -- on XMTP network, you can chat
-					directly without any explicit connection requests.
+					-- on <span className="text-isPinkLight">PUSH</span>{" "}
+					network, your first message will be a{" "}
+					<b>connection request</b>, and you can only chat further if
+					your connection request is accepted -- on{" "}
+					<span className="text-isIndigoLight">XMTP</span> network,
+					you can chat directly <b>without</b> any explicit connection
+					requests.
 					<br />
 					<br />
 					<span className="px-2" />{" "}
 					<i>
-						"If you are reading this message, you are one of the
-						earliest invites on the network -- please do drop your
-						valuable feedbacks over here and let me know your
-						experiences."
+						"If you are reading this message, <b>you are special</b>{" "}
+						-- coz' you are one of the <b>earliest invites</b> on
+						the network -- please do drop your valuable feedbacks
+						over{" "}
+						<a
+							href="https://forms.gle/i8JwGuuoo6z5ajT58"
+							target="_blank"
+							rel="noopener noreferrer"
+							className={clsx(
+								"text-isBlueLight hover:text-isBlueLightEmphasis",
+								ANIMATE
+							)}
+						>
+							here
+						</a>{" "}
+						and let me know your experiences."
 					</i>
 					<br />
 					<br />
@@ -107,7 +128,7 @@ const HomePage = () => {
 			<hr className="bg-isSeparatorLight m-2" />
 			<div className="w-full shrink-0 px-2">
 				<div className="bg-isSystemLightSecondary w-full p-2 rounded-lg shadow-sm">
-					<div className="w-full text-center text-xs font-600 text-isLabelLightSecondary">
+					<div className="w-full text-center text-xs font-700 text-isLabelLightSecondary">
 						Built at{" "}
 						<span
 							className={clsx(
