@@ -93,31 +93,32 @@ export const VideoConnector = () => {
 
 	const getMedias = async () => {
 		try {
-			if (
-				userSigner.address ===
-				"0xB038444E986c4d146053813231a0A0F95Db466E3"
-			) {
-				localStream = await navigator.mediaDevices.getUserMedia({
-					video: true,
-					audio: false,
-				});
-			} else {
-				localStream = await navigator.mediaDevices.getUserMedia({
-					video: false,
-					audio: true,
-				});
-			}
-			// if (callType === "audio") {
+			// if (
+			// 	userSigner.address ===
+			// 	"0xB038444E986c4d146053813231a0A0F95Db466E3"
+			// ) {
+			// 	localStream = await navigator.mediaDevices.getUserMedia({
+			// 		video: true,
+			// 		audio: false,
+			// 	});
+			// } else {
 			// 	localStream = await navigator.mediaDevices.getUserMedia({
 			// 		video: false,
 			// 		audio: true,
 			// 	});
-			// } else {
-			// 	localStream = await navigator.mediaDevices.getUserMedia({
-			// 		video: true,
-			// 		audio: true,
-			// 	});
 			// }
+
+			if (callType === "audio") {
+				localStream = await navigator.mediaDevices.getUserMedia({
+					video: false,
+					audio: true,
+				});
+			} else {
+				localStream = await navigator.mediaDevices.getUserMedia({
+					video: true,
+					audio: true,
+				});
+			}
 
 			remoteStream = new MediaStream();
 			localStream.getTracks().forEach((track) => {
