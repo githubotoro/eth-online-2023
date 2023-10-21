@@ -7,13 +7,41 @@ import { useStore } from "@/store";
 import React, { useEffect, useState } from "react";
 import { Checker } from "@/components/Loaders";
 import clsx from "clsx";
-import { ChatBubbleLeftRight, Phone, Camera } from "@/icons";
+import {
+	ChatBubbleLeftRight,
+	Phone,
+	Camera,
+	SquareStack,
+	CheckCircle,
+} from "@/icons";
 import Image from "next/image";
 import Link from "next/link";
 import { ANIMATE } from "@/components/Constants";
 // import { useStore } from "@/store";
+import { useSearchParams } from "next/navigation";
 
 const ProfilePage = () => {
+	const [copying, setCopying] = useState(false);
+	const delay = (milliseconds) => {
+		return new Promise((resolve) => {
+			setTimeout(resolve, milliseconds);
+		});
+	};
+
+	const copyAddress = async (address) => {
+		try {
+			setCopying(true);
+			await navigator.clipboard.writeText(address);
+			await delay(1000);
+			setCopying(false);
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	const searchParams = useSearchParams();
+	const username = searchParams.get("username");
+
 	const params = useParams();
 	if (!ethers.utils.isAddress(params.user)) {
 		return;
@@ -72,10 +100,53 @@ const ProfilePage = () => {
 				<div className="px-2 w-full shrink-0">
 					<div className="rounded-xl bg-isSystemLightSecondary p-2 drop-shadow-sm">
 						<div className="flex flex-row space-x-2 items-center place-content-center">
-							<div className="shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-isSystemLightTertiary to-isSystemDarkTertiary drop-shadow-sm"></div>
-							<div className="text-[1rem] truncate text-ellipsis font-500 text-isLabelLightSecondary">
+							<div className="shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-isSystemLightTertiary to-isSystemDarkTertiary drop-shadow-sm mr-1"></div>
+
+							<div
+								className={clsx(
+									" w-fit text-isSystemDarkTertiary font-700 text-center text-[1rem] shadow-sm bg-isWhite py-1 px-2 rounded-md",
+									username === null ? "hidden" : ""
+								)}
+							>{`@${username}`}</div>
+
+							<div className="pl-1 text-[0.9rem] truncate text-ellipsis font-600 text-isLabelLightSecondary max-w-[8rem]">
 								{params.user}
 							</div>
+							<button
+								disabled={copying === true}
+								onClick={() => {
+									copyAddress(params.user);
+								}}
+								className={clsx(
+									"shrink-0",
+									copying === true
+										? "rotate-[360deg]"
+										: "rotate-0",
+									ANIMATE
+								)}
+							>
+								{copying === true ? (
+									<CheckCircle
+										classes={clsx(
+											"shrink-0 h-6 w-6 rounded-none fill-isGreenLight stroke-none drop-shadow-sm"
+										)}
+									/>
+								) : (
+									<SquareStack
+										onClick={async () => {
+											setCopying(true);
+											await navigator.clipboard.writeText(
+												params.user
+											);
+											await delay(1000);
+											setCopying(false);
+										}}
+										classes={clsx(
+											"shrink-0 h-6 w-6 rounded-none fill-isBlueLight drop-shadow-sm cursor-pointer"
+										)}
+									/>
+								)}
+							</button>
 						</div>
 					</div>
 					<div className="w-full place-content-center flex flex-col items-center">

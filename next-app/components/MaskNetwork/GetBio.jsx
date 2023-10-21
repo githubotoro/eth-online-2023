@@ -112,7 +112,7 @@ export const GetBio = ({ ogAddress, web3Bio, CTA_CLASSES, flag }) => {
 	} else if (flag === "settings") {
 		return (
 			<div className="w-full h-full rounded-2xl items-center place-content-center text-center flex flex-col text-[0.8rem] text-isLabelLightSecondary space-y-1 leading-tight font-600">
-				<span className="text-isSystemDarkSecondary text-[1rem] max-w-xs">
+				<span className="text-isSystemDarkSecondary text-[1rem] max-w-sm">
 					You <b>haven't linked</b> any on-chain profiles yet.
 				</span>
 				<br />

@@ -17,3 +17,4 @@ export { UserCircle } from "./UserCircle";
 export { Key } from "./Key";
 export { ExclamationTriangle } from "./ExclamationTriangle";
 export { Wallet } from "./Wallet";
+export { SquareStack } from "./SquareStack";

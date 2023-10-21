@@ -271,7 +271,7 @@ const ContactsPage = async () => {
 							)}
 
 							<Link
-								href={`/contacts/${address}`}
+								href={`/contacts/${address}?username=${username}`}
 								key={`${address}-username`}
 								className={clsx("  w-full", ANIMATE)}
 							>
