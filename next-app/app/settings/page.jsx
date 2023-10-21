@@ -12,14 +12,11 @@ import { LinkIcon } from "@/icons";
 import { GetBio } from "@/components/MaskNetwork";
 
 const SettingsPage = () => {
-	const [clearningStorage, setClearingStorage] = useState(false);
+	const [clearingStorage, setClearingStorage] = useState(false);
 
 	const { address } = useAccount();
 
 	const { ogAddress, setOgAddress, web3Bio } = useStore();
-
-	// console.log("address is ", address);
-	// console.log("ogAddress is ", ogAddress);
 
 	const changeOgAddress = () => {
 		if (address !== undefined && address !== null) {
@@ -74,16 +71,17 @@ const SettingsPage = () => {
 			<hr className="bg-isSeparatorLight m-2" />
 			<div className="w-full pt-0 p-1 px-2 pb-2 shrink-0 text-lg font-600 text-isSystemLightSecondary flex flex-col space-y-2">
 				<button
-					onClick={async () => {
-						setClearingStorage(!clearningStorage);
-						// await localStoage.clear();
+					onClick={() => {
+						setClearingStorage(true);
+						localStorage.clear();
+						setClearingStorage(false);
 					}}
 					className={clsx(
 						"w-full text-center rounded-lg p-1 h-8 leading-none bg-isRedDark hover:text-isWhite hover:bg-isRedLight drop-shadow-sm text-[1rem]",
 						ANIMATE
 					)}
 				>
-					{clearningStorage === true ? (
+					{clearingStorage === true ? (
 						<Spinner
 							classes="h-6 w-6 fill-isRedLightEmphasis"
 							ring="fill-isWhite"

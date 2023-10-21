@@ -17,6 +17,9 @@ import { StaticBar } from "./StaticBar";
 import * as PushAPIRest from "@pushprotocol/restapi";
 // import { Client } from "@xmtp/xmtp-js";
 import { Client, useClient } from "@xmtp/react-sdk";
+import clsx from "clsx";
+import { Key, UserCircle, Wifi } from "@/icons";
+import Image from "next/image";
 
 export const MainConnector = () => {
 	// fetching store
@@ -137,11 +140,11 @@ export const MainConnector = () => {
 			const currOgAddress = window.localStorage.getItem("ogAddress");
 			setOgAddress(currOgAddress);
 
-			// if(!currUsername) {
-			// 	const res = await fetch('/api/username')
-			// 	const data = await res.json()
-			// 	setUsername(data.username)
-			// }
+			if (!currUsername) {
+				const res = await fetch("/api/username");
+				const data = await res.json();
+				setUsername(data.username);
+			}
 
 			// confirming identity
 			setConfirmingIdentity(true);
@@ -265,36 +268,103 @@ export const MainConnector = () => {
 	} else if (userSigner === null) {
 		return (
 			<React.Fragment>
-				<div className="flex flex-row">
-					<input
-						value={username}
-						placeholder="username"
-						type="text"
-						onChange={(e) => {
-							setUsername(e.target.value);
-						}}
-					/>
+				{/* <hr className="bg-isSeparatorLight m-2" /> */}
+				<div className="grow bg-isSystemLightSecondary p-2 place-content-center items-center flex flex-col mt-2">
+					<div className="w-14 h-14 relative">
+						<Image
+							fill
+							src="/logo.svg"
+							alt="logo"
+							className="drop-shadow-sm"
+						/>
+					</div>
 
-					<input
-						value={inviteCode}
-						placeholder="invite code"
-						type="text"
-						onChange={(e) => {
-							setInviteCode(e.target.value);
-						}}
-					/>
+					<div className="mt-1 pb-2 px-2 shrink-0 text-xl text-center font-700 text-isSystemDarkPrimary mb-4">
+						Welcome to ETH-Line
+					</div>
+					<div className="flex flex-col items-center place-content-center space-y-1">
+						<div className="flex flex-row space-x-2 items-center">
+							<UserCircle
+								classes={clsx(
+									"w-10 h-10 fill-isBlueLight drop-shadow-sm"
+								)}
+							/>
+							<input
+								value={username}
+								className={clsx(
+									"w-full text-[1rem] rounded-lg shadow-sm focus:outline-none h-8 px-2 max-w-xs bg-isWhite opacity-70 focus:opacity-100 hover:opacity-100",
+									ANIMATE
+								)}
+								placeholder="Username"
+								type="text"
+								onChange={(e) => {
+									setUsername(e.target.value);
+								}}
+								onKeyPress={(e) => {
+									const regex = /^[a-zA-Z]*$/;
+									if (!regex.test(e.key)) {
+										e.preventDefault();
+									}
+								}}
+							/>
+						</div>
 
-					<button
-						disabled={username === "" || inviteCode === ""}
-						onClick={async () => {
-							setIsRegistering(true);
-							await connectUser({ registerCall: true });
-							setIsRegistering(false);
-						}}
-					>
-						Register
-					</button>
+						<div className="flex flex-row space-x-2 items-center">
+							<Key
+								classes={clsx(
+									"w-9 h-9 fill-isOrangeLight drop-shadow-sm"
+								)}
+							/>
+
+							<input
+								className={clsx(
+									"w-full text-[1rem] rounded-lg shadow-sm focus:outline-none h-8 px-2 max-w-xs bg-isWhite opacity-70 focus:opacity-100 hover:opacity-100",
+									ANIMATE
+								)}
+								value={inviteCode.toUpperCase()}
+								placeholder="Invite Code"
+								type="text"
+								onChange={(e) => {
+									setInviteCode(e.target.value.toUpperCase());
+								}}
+							/>
+						</div>
+
+						<div className="flex flex-col max-w-xs items-end w-full pt-2">
+							<button
+								disabled={username === "" || inviteCode === ""}
+								className={clsx(
+									"w-fit text-[1rem] rounded-lg shadow-sm focus:outline-none h-8 px-2 max-w-xs bg-isGreenLight  hover:bg-isGreenLightEmphasis font-600 text-isWhite",
+									ANIMATE
+								)}
+								onClick={async () => {
+									setIsRegistering(true);
+									await connectUser({ registerCall: true });
+									setIsRegistering(false);
+								}}
+							>
+								Register
+							</button>
+							<div className="mt-5 w-full text-center font-600 text-isLabelLightSecondary ">
+								Don't have invite code? Request{" "}
+								<a
+									href="https://forms.gle/X1g7dSbB3vs67cEs7"
+									target="_blank"
+									rel="noopener noreferrer"
+									className={clsx(
+										"text-isBlueLight hover:text-isBlueLightEmphasis",
+										ANIMATE
+									)}
+								>
+									here
+								</a>
+								.
+							</div>
+						</div>
+					</div>
 				</div>
+
+				{/* <hr className="bg-isSeparatorLight m-2" /> */}
 			</React.Fragment>
 		);
 	} else {

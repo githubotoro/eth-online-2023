@@ -13,3 +13,5 @@ export { ChatBubbleLeftRight } from "./ChatBubbleLeftRight";
 export { Phone } from "./Phone";
 export { Camera } from "./Camera";
 export { Wifi } from "./Wifi";
+export { UserCircle } from "./UserCircle";
+export { Key } from "./Key";

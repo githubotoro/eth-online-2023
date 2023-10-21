@@ -31,7 +31,27 @@ export const metadata = {
 const RootLayout = ({ children }) => {
 	return (
 		<html lang="en">
-			<link rel="manifest" href="/manifest.json" />
+			<head>
+				<link rel="icon" href="/favicon.ico" sizes="any" />
+				<link
+					rel="apple-touch-icon"
+					href="/apple-touch-icon.png"
+					type="image/png"
+					sizes="180x180"
+				/>
+				<link
+					rel="icon"
+					href="/android-chrome-512x512.png"
+					type="image/png"
+					sizes="512x512"
+				/>
+				<link
+					rel="icon"
+					href="/android-chrome-192x192.png"
+					type="image/png"
+					sizes="192x192"
+				/>
+			</head>
 
 			<body className={clsx(inter.variable, "text-xs font-sans")}>
 				<Toaster position="top-center" reverseOrder={false} />
