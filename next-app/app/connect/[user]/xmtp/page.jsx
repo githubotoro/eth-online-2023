@@ -210,13 +210,13 @@ const XmtpConnectPage = () => {
 						title: `${
 							userSigner.address
 						} sent a message via XMTP at ${new Date().getTime()}`,
-						body: `Check out your chats to see the message.`,
+						body: message,
 					},
 					payload: {
 						title: `${
 							userSigner.address
 						} sent a message via XMTP at ${new Date().getTime()}`,
-						body: `Check out your chats to see the message.`,
+						body: message,
 						cta: `/connect/${userSigner.address}/xmtp`,
 						img: "",
 					},
@@ -325,7 +325,6 @@ const XmtpConnectPage = () => {
 						</button>
 					)}
 				</div>
-				<div className="h-9 w-full p-1 shrink-0"></div>
 			</React.Fragment>
 		);
 	} else {
