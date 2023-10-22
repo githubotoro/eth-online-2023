@@ -485,7 +485,7 @@ export const VideoConnector = () => {
 				<div className="grow px-2 relative">
 					<video
 						className={clsx(
-							"w-full h-full bg-isBlueDark rounded-2xl shadow-sm object-cover aspect-[4/3]",
+							"absolute w-full h-full bg-isBlueDark rounded-2xl shadow-sm object-cover",
 							isCallAccepted === true ? "" : "hidden"
 						)}
 						ref={remoteVideo}
@@ -530,7 +530,13 @@ export const VideoConnector = () => {
 					</div> */}
 					<div
 						className={clsx(
-							"w-1/5 aspect-[3/4] z-50 bg-isWhite rounded-2xl shadow-sm absolute bottom-2 right-4 animate-pulse",
+							"w-full h-full bg-isSystemLightSecondary rounded-2xl shadow-sm animate-pulse",
+							isCallAccepted === false ? "" : "hidden"
+						)}
+					></div>
+					<div
+						className={clsx(
+							"w-1/5 aspect-[3/4] bg-isWhite rounded-2xl shadow-sm absolute bottom-2 right-4 animate-pulse",
 							isCallAccepted === false ? "" : "hidden"
 						)}
 					></div>
