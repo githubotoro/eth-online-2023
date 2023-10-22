@@ -26,14 +26,30 @@ import { ANIMATE } from "../Constants";
 
 const servers = {
 	iceServers: [
+		// {
+		// 	urls: [
+		// 		// "stun:stun.l.google.com:19302",
+		// 		// "stun:stun1.l.google.com:19302",
+		// 		// "stun:stun2.l.google.com:19302",
+		// 		// "stun:stun3.l.google.com:19302",
+		// 		// "stun:stun4.l.google.com:19302",
+		// 		"STUN:freeturn.net:3478",
+		// 		"TURN:freeturn.net:3478",
+		// 		"STUN:freeturn.net:5349",
+
+		// 	],
+		// },
+		{ urls: "stun:freeturn.net:5349" },
+		{ urls: "stun:freeturn.net:3478" },
 		{
-			urls: [
-				"stun:stun.l.google.com:19302",
-				"stun:stun1.l.google.com:19302",
-				"stun:stun2.l.google.com:19302",
-				"stun:stun3.l.google.com:19302",
-				"stun:stun4.l.google.com:19302",
-			],
+			urls: "turn:freeturn.net:3478",
+			username: "free",
+			credential: "free",
+		},
+		{
+			urls: "turns:freeturn.tel:5349",
+			username: "free",
+			credential: "free",
 		},
 	],
 	iceCandidatePoolSize: 10,
