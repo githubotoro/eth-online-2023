@@ -59,7 +59,7 @@ export const NotificationList = () => {
 	}, [latestFeedItem, latestNotification]);
 
 	const GetNetworkLogo = (network) => {
-		if (network === "PUSH") {
+		if (network === "push") {
 			return (
 				<div className="absolute w-4 h-4 -right-1 -bottom-1 rounded-md drop-shadow-sm overflow-hidden">
 					<Image
@@ -70,7 +70,7 @@ export const NotificationList = () => {
 					/>
 				</div>
 			);
-		} else if (network === "XMTP") {
+		} else if (network === "xmtp") {
 			<div className="absolute w-4 h-4 -right-1 -bottom-1 rounded-md drop-shadow-sm overflow-hidden">
 				<Image
 					src="/assets/xmtp-logo.png "
