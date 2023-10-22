@@ -108,6 +108,7 @@ export const VideoConnector = () => {
 				setPeerAddress(peer);
 
 				const data = JSON.parse(message);
+				console.log("data is ", data);
 
 				setCallId(data.callId);
 				setPeerUsername(data.peerUsername);
@@ -482,16 +483,19 @@ export const VideoConnector = () => {
 						</div>
 					</div>
 				</div>
-				<div className="grow px-2 relative">
-					<video
-						className={clsx(
-							"absolute w-full h-full bg-isBlueDark rounded-2xl shadow-sm object-cover",
-							isCallAccepted === true ? "" : "hidden"
-						)}
-						ref={remoteVideo}
-						autoPlay
-						playsInline
-					></video>
+				<div className="grow w-full px-2 relative">
+					<div className="absolute top-0 left-0 px-2 w-full h-full">
+						<video
+							className={clsx(
+								"w-full h-full bg-isBlueDark rounded-2xl shadow-sm object-cover",
+								isCallAccepted === true ? "" : "hidden"
+							)}
+							ref={remoteVideo}
+							autoPlay
+							playsInline
+						></video>
+					</div>
+
 					<video
 						className={clsx(
 							"w-1/5 aspect-[3/4] z-40 bg-isGreenDark rounded-2xl shadow-sm absolute bottom-2 right-4 object-cover",
