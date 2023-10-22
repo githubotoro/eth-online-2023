@@ -71,4 +71,6 @@ export const useStore = create((set) => ({
 	setIsCallAccepted: (isCallAccepted) => set({ isCallAccepted }),
 	callId: null,
 	setCallId: (callId) => set({ callId }),
+	peerUsername: null,
+	setPeerUsername: (peerUsername) => set({ peerUsername }),
 }));

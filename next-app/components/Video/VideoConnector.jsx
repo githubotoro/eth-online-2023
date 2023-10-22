@@ -14,7 +14,7 @@ import {
 	getDoc,
 	setDoc,
 } from "firebase/firestore";
-import { Phone } from "@/icons";
+import { Phone, SquareStack } from "@/icons";
 import clsx from "clsx";
 import { ANIMATE } from "../Constants";
 
@@ -40,6 +40,24 @@ const servers = {
 };
 
 export const VideoConnector = () => {
+	const [copying, setCopying] = useState(false);
+	const delay = (milliseconds) => {
+		return new Promise((resolve) => {
+			setTimeout(resolve, milliseconds);
+		});
+	};
+
+	const copyAddress = async (address) => {
+		try {
+			setCopying(true);
+			await navigator.clipboard.writeText(address);
+			await delay(1000);
+			setCopying(false);
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	let pc = new RTCPeerConnection(servers);
 	let localStream = null;
 	let remoteStream = null;
@@ -62,11 +80,14 @@ export const VideoConnector = () => {
 		setIsCallAccepted,
 		callId,
 		setCallId,
+		peerUsername,
+		setPeerUsername,
+		username,
 	} = useStore();
 
 	const checkCallStatus = async () => {
 		try {
-			console.log("latest notification is ", latestNotification);
+			// console.log("latest notification is ", latestNotification);
 			const title = latestNotification.payload.data.asub;
 			const addressRegex = /0x[a-fA-F0-9]{40}/;
 			const peer = title.match(addressRegex)[0];
@@ -85,7 +106,11 @@ export const VideoConnector = () => {
 
 				setOnCall(true);
 				setPeerAddress(peer);
-				setCallId(message);
+
+				const data = JSON.parse(message);
+
+				setCallId(data.callId);
+				setPeerUsername(data.peerUsername);
 			} else if (endedRegex.test(title)) {
 				if (isCallAccepted === true) {
 					const stream = webcamVideo.current.srcObject;
@@ -248,13 +273,19 @@ export const VideoConnector = () => {
 								title: `${
 									userSigner.address
 								} is calling via ${callType} at ${new Date().getTime()}`,
-								body: `${callDoc.id}`,
+								body: JSON.stringify({
+									callId: callDoc.id,
+									username: username,
+								}),
 							},
 							payload: {
 								title: `${
 									userSigner.address
 								} is calling via ${callType} at ${new Date().getTime()}`,
-								body: `${callDoc.id}`,
+								body: JSON.stringify({
+									callId: callDoc.id,
+									username: username,
+								}),
 								cta: ``,
 								img: "",
 							},
@@ -336,7 +367,7 @@ export const VideoConnector = () => {
 			setPeerAddress(null);
 			setCallId(null);
 
-			if (isCallAccepted === true) {
+			if (localStream !== null) {
 				const stream = webcamVideo.current.srcObject;
 				const tracks = stream.getTracks();
 
@@ -383,6 +414,8 @@ export const VideoConnector = () => {
 		makeCall();
 	}, [onCall, isCaller, peerAddress, callType]);
 
+	console.log("remote stream is ", remoteStream);
+
 	// && peerAddress !== null
 	if (onCall === true && peerAddress !== null) {
 		return (
@@ -395,6 +428,59 @@ export const VideoConnector = () => {
 					Make Call
 				</button> */}
 				<hr className="bg-isSeparatorLight m-2" />
+				<div className="p-2 pt-0">
+					<div className="rounded-xl bg-isSystemLightSecondary p-2 drop-shadow-sm">
+						<div className="flex flex-row space-x-2 items-center place-content-center">
+							<div className="shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-isSystemLightTertiary to-isSystemDarkTertiary drop-shadow-sm mr-1"></div>
+
+							<div
+								className={clsx(
+									" w-fit text-isSystemDarkTertiary font-700 text-center text-[1rem] shadow-sm bg-isWhite py-1 px-2 rounded-md",
+									peerUsername === null ? "hidden" : ""
+								)}
+							>{`@${peerUsername}`}</div>
+
+							<div className="pl-1 text-[0.9rem] truncate text-ellipsis font-600 text-isLabelLightSecondary max-w-[8rem]">
+								{peerAddress}
+							</div>
+							<button
+								disabled={copying === true}
+								onClick={() => {
+									copyAddress(peerAddress);
+								}}
+								className={clsx(
+									"shrink-0",
+									copying === true
+										? "rotate-[360deg]"
+										: "rotate-0",
+									ANIMATE
+								)}
+							>
+								{copying === true ? (
+									<CheckCircle
+										classes={clsx(
+											"shrink-0 h-6 w-6 rounded-none fill-isGreenLight stroke-none drop-shadow-sm"
+										)}
+									/>
+								) : (
+									<SquareStack
+										onClick={async () => {
+											setCopying(true);
+											await navigator.clipboard.writeText(
+												peerAddress
+											);
+											await delay(1000);
+											setCopying(false);
+										}}
+										classes={clsx(
+											"shrink-0 h-6 w-6 rounded-none fill-isBlueLight drop-shadow-sm cursor-pointer"
+										)}
+									/>
+								)}
+							</button>
+						</div>
+					</div>
+				</div>
 				<div className="grow px-2 relative">
 					<video
 						className={clsx(
@@ -407,22 +493,43 @@ export const VideoConnector = () => {
 					></video>
 					<video
 						className={clsx(
-							"w-1/5 aspect-[3/4] bg-isGreenDark rounded-2xl shadow-sm absolute bottom-2 right-4 object-cover",
+							"w-1/5 aspect-[3/4] z-40 bg-isGreenDark rounded-2xl shadow-sm absolute bottom-2 right-4 object-cover",
 							isCallAccepted === true ? "" : "hidden"
 						)}
 						ref={webcamVideo}
 						autoPlay
 						playsInline
 					></video>
+					<div className="bg-isWhite px-2 absolute w-full h-full top-0 left-0 z-10 text-isLabelLightSecondary font-700 text-lg">
+						<div
+							className={clsx(
+								"w-full h-full  bg-isSystemLightTertiary animate-pulse rounded-2xl shadow-sm flex flex-col items-center place-content-center",
+								isCallAccepted === false ||
+									remoteStream === null
+									? ""
+									: "hidden"
+							)}
+						>
+							<div className="w-full max-w-xs text-center">
+								{isCaller === true
+									? `Waiting for @ ${peerUsername} -- ${peerAddress.slice(
+											0,
+											5
+									  )}...${peerAddress.slice(
+											peerAddress.length - 3
+									  )} to accept the call.`
+									: `@ ${peerUsername} -- ${peerAddress.slice(
+											0,
+											5
+									  )}...${peerAddress.slice(
+											peerAddress.length - 3
+									  )} is calling you.`}
+							</div>
+						</div>
+					</div>
 					<div
 						className={clsx(
-							"w-full h-full bg-isSystemLightTertiary animate-pulse rounded-2xl shadow-sm",
-							isCallAccepted === false ? "" : "hidden"
-						)}
-					></div>
-					<div
-						className={clsx(
-							"w-1/5 aspect-square bg-isWhite rounded-2xl shadow-sm absolute bottom-2 right-4 animate-pulse",
+							"w-1/5 aspect-[3/4] z-50 bg-isWhite rounded-2xl shadow-sm absolute bottom-2 right-4 animate-pulse",
 							isCallAccepted === false ? "" : "hidden"
 						)}
 					></div>

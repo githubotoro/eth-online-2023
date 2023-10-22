@@ -17,7 +17,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { ANIMATE } from "@/components/Constants";
-// import { useStore } from "@/store";
 import { useSearchParams } from "next/navigation";
 
 const ProfilePage = () => {
@@ -27,6 +26,8 @@ const ProfilePage = () => {
 			setTimeout(resolve, milliseconds);
 		});
 	};
+
+	const { setPeerUsername } = useStore();
 
 	const copyAddress = async (address) => {
 		try {
@@ -157,6 +158,7 @@ const ProfilePage = () => {
 									setIsCaller(true);
 									setCallType("audio");
 									setPeerAddress(params.user);
+									setPeerUsername(username);
 									setOnCall(true);
 								}}
 								className={clsx(
@@ -177,6 +179,7 @@ const ProfilePage = () => {
 									setIsCaller(true);
 									setCallType("video");
 									setPeerAddress(params.user);
+									setPeerUsername(username);
 									setOnCall(true);
 								}}
 								className={clsx(
@@ -196,7 +199,7 @@ const ProfilePage = () => {
 									classes={clsx("fill-isOrangeLight")}
 								/>
 							</div>
-							<div className="w-fit bg-isSystemLightSecondary rounded-lg rounded-l-none flex flex-col justify-between px-1 md:py-1 h-full">
+							<div className="w-fit bg-isSystemLightSecondary rounded-lg rounded-l-none flex flex-col justify-between px-1 py-1 h-full">
 								<Link
 									href={`/connect/${params.user}/push`}
 									className="contents"
