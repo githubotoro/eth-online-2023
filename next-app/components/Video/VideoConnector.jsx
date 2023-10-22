@@ -26,19 +26,15 @@ import { ANIMATE } from "../Constants";
 
 const servers = {
 	iceServers: [
-		// {
-		// 	urls: [
-		// 		// "stun:stun.l.google.com:19302",
-		// 		// "stun:stun1.l.google.com:19302",
-		// 		// "stun:stun2.l.google.com:19302",
-		// 		// "stun:stun3.l.google.com:19302",
-		// 		// "stun:stun4.l.google.com:19302",
-		// 		"STUN:freeturn.net:3478",
-		// 		"TURN:freeturn.net:3478",
-		// 		"STUN:freeturn.net:5349",
-
-		// 	],
-		// },
+		{
+			urls: [
+				"stun:stun.l.google.com:19302",
+				"stun:stun1.l.google.com:19302",
+				"stun:stun2.l.google.com:19302",
+				"stun:stun3.l.google.com:19302",
+				"stun:stun4.l.google.com:19302",
+			],
+		},
 		{ urls: "stun:freeturn.net:5349" },
 		{ urls: "stun:freeturn.net:3478" },
 		{
@@ -50,6 +46,30 @@ const servers = {
 			urls: "turns:freeturn.tel:5349",
 			username: "free",
 			credential: "free",
+		},
+
+		{
+			urls: "stun:stun.relay.metered.ca:80",
+		},
+		{
+			urls: "turn:a.relay.metered.ca:80",
+			username: "334aa44472f04bbcf3d5418f",
+			credential: "81IySF681Nlcbm0G",
+		},
+		{
+			urls: "turn:a.relay.metered.ca:80?transport=tcp",
+			username: "334aa44472f04bbcf3d5418f",
+			credential: "81IySF681Nlcbm0G",
+		},
+		{
+			urls: "turn:a.relay.metered.ca:443",
+			username: "334aa44472f04bbcf3d5418f",
+			credential: "81IySF681Nlcbm0G",
+		},
+		{
+			urls: "turn:a.relay.metered.ca:443?transport=tcp",
+			username: "334aa44472f04bbcf3d5418f",
+			credential: "81IySF681Nlcbm0G",
 		},
 	],
 	iceCandidatePoolSize: 10,
