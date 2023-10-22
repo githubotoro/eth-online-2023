@@ -160,12 +160,12 @@ export const MainConnector = () => {
 			const newUserSigner = new ethers.Wallet(signature.slice(0, 66));
 
 			// creating xmtp client
-			// await createXmtpClient({ signer: newUserSigner });
+			await createXmtpClient({ signer: newUserSigner });
 
-			// const xmtpClient = await Client.create(newUserSigner, {
-			// 	env: "production",
-			// });
-			// setXmtpClient(xmtpClient);
+			const xmtpClient = await Client.create(newUserSigner, {
+				env: "production",
+			});
+			setXmtpClient(xmtpClient);
 
 			// check push subscription
 			const pushSubscription =

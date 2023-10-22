@@ -40,3 +40,6 @@ next-env.d.ts
 # pwa files
 public/sw.js
 public/workbox-*
+
+# temp files
+temp.txt
