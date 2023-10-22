@@ -275,7 +275,7 @@ export const VideoConnector = () => {
 								} is calling via ${callType} at ${new Date().getTime()}`,
 								body: JSON.stringify({
 									callId: callDoc.id,
-									username: username,
+									peerUsername: username,
 								}),
 							},
 							payload: {
@@ -284,7 +284,7 @@ export const VideoConnector = () => {
 								} is calling via ${callType} at ${new Date().getTime()}`,
 								body: JSON.stringify({
 									callId: callDoc.id,
-									username: username,
+									peerUsername: username,
 								}),
 								cta: ``,
 								img: "",
@@ -415,6 +415,7 @@ export const VideoConnector = () => {
 	}, [onCall, isCaller, peerAddress, callType]);
 
 	console.log("remote stream is ", remoteStream);
+	console.log("remote video is ", remoteVideo);
 
 	// && peerAddress !== null
 	if (onCall === true && peerAddress !== null) {
@@ -500,7 +501,7 @@ export const VideoConnector = () => {
 						autoPlay
 						playsInline
 					></video>
-					<div className="bg-isWhite px-2 absolute w-full h-full top-0 left-0 z-10 text-isLabelLightSecondary font-700 text-lg">
+					{/* <div className="bg-isWhite px-2 absolute w-full h-full top-0 left-0 z-10 text-isLabelLightSecondary font-700 text-lg">
 						<div
 							className={clsx(
 								"w-full h-full  bg-isSystemLightTertiary animate-pulse rounded-2xl shadow-sm flex flex-col items-center place-content-center",
@@ -526,7 +527,7 @@ export const VideoConnector = () => {
 									  )} is calling you.`}
 							</div>
 						</div>
-					</div>
+					</div> */}
 					<div
 						className={clsx(
 							"w-1/5 aspect-[3/4] z-50 bg-isWhite rounded-2xl shadow-sm absolute bottom-2 right-4 animate-pulse",
