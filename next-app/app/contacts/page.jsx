@@ -13,6 +13,8 @@ import {
 	deleteDoc,
 } from "firebase/firestore";
 
+export const revalidate = 60;
+
 const fetchIdentities = async (users) => {
 	try {
 		const identities = await Promise.allSettled(
