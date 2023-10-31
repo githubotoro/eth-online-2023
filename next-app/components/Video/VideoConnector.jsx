@@ -47,7 +47,6 @@ const servers = {
 			username: "free",
 			credential: "free",
 		},
-
 		{
 			urls: "stun:stun.relay.metered.ca:80",
 		},
@@ -533,6 +532,7 @@ export const VideoConnector = () => {
 					</div>
 
 					<video
+						muted={true}
 						className={clsx(
 							"w-1/5 aspect-[3/4] z-40 bg-isGreenDark rounded-2xl shadow-sm absolute bottom-2 right-4 object-cover",
 							isCallAccepted === true ? "" : "hidden"
